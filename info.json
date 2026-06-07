@@ -1,0 +1,12 @@
+{
+  "name": "interstellar-fleets",
+  "version": "0.1.0",
+  "title": "Interstellar Fleets",
+  "author": "Codex",
+  "factorio_version": "2.0",
+  "dependencies": [
+    "base >= 2.0.0",
+    "space-age >= 2.0.0"
+  ],
+  "description": "Endgame Space Age fleet scaling with interstellar dust, replicators, interstellar labs, relativistic drives, and UPS-friendly fleet multipliers."
+}
