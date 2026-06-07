@@ -1,0 +1,44 @@
+# Interstellar Fleets Design
+
+## Architecture
+
+The mod is split into data-stage prototypes and runtime fleet simulation.
+
+- `prototypes/locations.lua` defines the Galactic Center and a very long Space Age route.
+- `prototypes/entities.lua` defines interstellar labs, dust collectors, replicators, and drives by extending Space Age prototypes.
+- `prototypes/recipes.lua` defines dust conversion and fleet construction recipes.
+- `control.lua` stores fleet state in `storage.fleets` keyed by `LuaSpacePlatform.index`.
+
+## Runtime Systems
+
+Fleet state:
+
+```lua
+storage.fleets[platform_index] = {
+  size = 1,
+  speed_c = 0.01,
+  distance_m = 0,
+  blueprint_hash = nil
+}
+```
+
+Every 60 ticks, the runtime loop:
+
+- Applies `LuaSurface.global_effect` on each platform surface so production machines and labs receive a speed bonus equal to `fleet_size - 1`.
+- Inserts interstellar dust into the platform hub based on collector count, speed, and fleet size.
+- Advances abstract interstellar distance by `speed_c * c`.
+- Refreshes open fleet management GUIs.
+
+## Merge And Split
+
+Merging computes a platform signature from player-force entities on the platform. The first merge records the signature; later merges require the same signature. A merge consumes one ship starter pack and increments fleet size.
+
+Updating the blueprint stores the current platform signature as the fleet design and clears partial progress. This is the lightweight implementation of propagating an upgraded ship layout across abstract copies.
+
+Splitting halves fleet size, clears partial progress on production entities, creates a new platform when possible, clones the source platform layout into it, and copies speed, distance, and blueprint signature to the split fleet.
+
+Boosting counts stellar fusion drives and antimatter drives, consumes fusion power cells from the platform hub, then applies diminishing acceleration using the current Lorentz factor.
+
+## UPS Strategy
+
+The implementation avoids duplicating entities for each ship copy. Fleet size affects script-generated outputs and aggregate lab speed, while the visible platform remains a single simulated platform.

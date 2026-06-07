@@ -1,0 +1,7 @@
+require("prototypes.categories")
+require("prototypes.locations")
+require("prototypes.items")
+require("prototypes.entities")
+require("prototypes.recipes")
+require("prototypes.technology")
+require("prototypes.shortcuts")
