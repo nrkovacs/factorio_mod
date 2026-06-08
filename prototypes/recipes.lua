@@ -113,6 +113,28 @@ local recipes = {
       {type = "item", name = "fusion-power-cell", amount = 10}
     },
     results = {{type = "item", name = "antimatter", amount = 1}}
+  },
+  {
+    type = "recipe",
+    name = "interstellar-dust-crushing",
+    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
+    icon_size = 64,
+    category = "crushing",
+    subgroup = "space-crushing",
+    order = "z[interstellar]-a[dust-crushing]",
+    auto_recycle = false,
+    enabled = false,
+    energy_required = 5,
+    ingredients = {{type = "item", name = "interstellar-dust", amount = 100}},
+    results = {
+      {type = "item", name = "interstellar-dust", amount = 60},
+      {type = "item", name = "metallic-asteroid-chunk", amount = 1, probability = 0.15},
+      {type = "item", name = "carbonic-asteroid-chunk", amount = 1, probability = 0.15},
+      {type = "item", name = "oxide-asteroid-chunk", amount = 1, probability = 0.15},
+      {type = "item", name = "promethium-asteroid-chunk", amount = 1, probability = 0.05}
+    },
+    allow_productivity = false,
+    allow_decomposition = false
   }
 }
 

@@ -14,7 +14,9 @@ Interstellar dust collectors gather `interstellar-dust` while installed on space
 
 `Quantum replication` unlocks the quantum replicator and dust-based recipes for raw materials. Replicators convert interstellar dust into ores and other Space Age raw resources such as iron ore, copper ore, coal, stone, uranium ore, carbon, ice, scrap, calcite, tungsten ore, holmium ore, lithium, yumako, jellynut, bioflux, biter eggs, pentapod eggs, and promethium asteroid chunks. They also create antimatter through an intentionally expensive recipe that consumes a large quantity of interstellar dust plus fusion power cells. This gives interstellar platforms a way to become more self-sufficient once they can sustain dust collection and energy production, including a way to bootstrap biological science inputs and biter eggs from scratch without importing them from Nauvis or Gleba.
 
-`Fleet printing` unlocks ship starter packs and antimatter drives. A ship starter pack represents the cost of adding one more matching platform to the fleet. Stellar fusion drives consume fusion power cells for dependable acceleration. Antimatter drives consume replicated antimatter and provide much stronger thrust, turning antimatter production into the premium fuel loop for high-speed interstellar travel.
+`Interstellar dust crushing` unlocks an asteroid-crusher recipe that reprocesses dust back into dust while occasionally exposing metallic, carbonic, oxide, and rare promethium asteroid chunks. This gives players a more Factorio-native alternative to direct promethium chunk replication: build crushers, handle probabilistic outputs, and sort mixed asteroid materials on-platform.
+
+`Fleet printing` unlocks ship starter packs and antimatter drives. A ship starter pack represents the cost of adding one more matching platform to the fleet. Stellar fusion drives consume fusion power cells for dependable acceleration. Antimatter drives consume replicated antimatter and provide much stronger thrust, turning antimatter production into the premium fuel loop for high-speed interstellar travel. The fleet UI includes an auto-boost toggle so mature platforms can automate acceleration instead of requiring repeated manual boost clicks.
 
 ## Fleet Consolidation
 
@@ -26,6 +28,7 @@ The interface exposes four actions:
 - `Split fleet`: divides the current fleet roughly in half and creates a new platform for the split-off ships.
 - `Update blueprint`: records the current platform layout as the fleet's matching layout.
 - `Boost`: consumes fusion power cells and/or antimatter to increase fleet speed based on installed drives.
+- `Auto boost`: toggles continuous once-per-second boosting while drives and matching fuel are available, pausing silently when fuel runs short.
 
 Merge protection is intentionally strict. The mod records a compact signature of the represented platform layout. If the platform changes after consolidation, further merging is blocked until you either update the blueprint or split the fleet. This prevents a fleet of supposedly identical ships from silently drifting out of sync with the one platform that Factorio is actually simulating.
 
@@ -43,6 +46,7 @@ Splitting a fleet clears partial crafting and research progress on the original 
 - `Ship starter pack`: expensive platform package consumed when merging ships into a fleet.
 - `Galactic Center`: a distant Space Age location and long-haul objective beyond normal platform logistics.
 - Expanded quantum replication inputs: yumako, jellynut, bioflux, pentapod eggs, and promethium asteroid chunks so mature platforms can continue all infinite science chains aboard interstellar fleets.
+- `Interstellar dust crushing`: asteroid-crusher recipe that recovers part of the dust input and rolls for metallic, carbonic, oxide, and promethium asteroid chunks.
 
 ## Art Direction
 
@@ -72,7 +76,7 @@ The goal is not to trivialize Space Age. The goal is to give mature megabases a 
 
 - Fleet state is stored in Factorio `storage` by platform index.
 - The represented platform receives surface-level speed and energy-consumption effects based on fleet size, approximating the throughput and power draw of the abstract ships.
-- Dust collection and acceleration run periodically in `control.lua`.
+- Dust collection, auto boost, and distance advancement run periodically in `control.lua`.
 - Dust overflow is spilled near the platform hub instead of being deleted, so a full hub does not permanently waste the fleet's recovery resource.
 - Merge/split operations are exposed through a custom GUI and shortcut.
 - Platform layout matching uses a deterministic signature over non-character, non-resource entities.
