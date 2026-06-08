@@ -20,8 +20,9 @@ Passing these checks proves the data stage loads, all prototypes resolve, contro
 
 Latest local run on 2026-06-07:
 
-- `--create .\validation\interstellar-fleets-split-fix-test.zip`: passed with exit code 0.
-- `--benchmark .\validation\interstellar-fleets-split-fix-test.zip --benchmark-ticks 600`: passed with exit code 0, averaging 0.084 ms/update.
+- `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-science-test.zip`: passed with exit code 0.
+- `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-science-test.zip --benchmark-ticks 600`: passed with exit code 0, averaging 0.089 ms/update.
+- `--start-server C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-scripted-validation.zip --until-tick 360`: passed with exit code 0 using the validation companion mod.
 
 ## Soft-Lock Review
 
