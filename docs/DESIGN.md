@@ -5,7 +5,7 @@
 The mod is split into data-stage prototypes and runtime fleet simulation.
 
 - `prototypes/locations.lua` defines the Galactic Center and a very long Space Age route.
-- `prototypes/entities.lua` defines interstellar labs, dust collectors, replicators, and drives by extending Space Age prototypes.
+- `prototypes/entities.lua` defines interstellar labs, dust collectors, replicators, drives, and space-safe production-machine variants by extending Space Age prototypes.
 - `prototypes/recipes.lua` defines dust conversion and fleet construction recipes.
 - `control.lua` stores fleet state in `storage.fleets` keyed by `LuaSpacePlatform.index`.
 
@@ -24,7 +24,7 @@ storage.fleets[platform_index] = {
 
 Every 60 ticks, the runtime loop:
 
-- Applies `LuaSurface.global_effect` on each platform surface so production machines and labs receive a speed bonus equal to `fleet_size - 1`.
+- Applies `LuaSurface.global_effect` on each platform surface so production machines and labs receive a speed bonus based on fleet size. Infinite fleet-coordination research increases this speed bonus without increasing the fleet-size power penalty.
 - Inserts interstellar dust into the platform hub based on collector count, speed, and fleet size.
 - Advances abstract interstellar distance by `speed_c * c`.
 - Refreshes open fleet management GUIs.
@@ -41,11 +41,13 @@ Boosting counts stellar fusion drives and antimatter drives, consumes the matchi
 
 Players can either click `Boost` manually or enable `Auto boost` in the fleet GUI. Auto boost attempts the same boost calculation once per second, consumes fuel only when a boost succeeds, and pauses quietly when drives or fuel are missing. This keeps acceleration automatable without accidentally deleting fuel or spamming warnings.
 
-Two infinite technologies reduce boost fuel costs. `stellar-fusion-drive-efficiency` reduces fusion power cell costs by 8% per completed level, and `antimatter-drive-efficiency` reduces antimatter costs by 10% per completed level. Both chains clamp at a 20% minimum fuel-cost multiplier so late research rewards sustained investment without making propulsion free.
+Several infinite technologies extend the fleet loop. `stellar-fusion-drive-efficiency` reduces fusion power cell costs by 8% per completed level, and `antimatter-drive-efficiency` reduces antimatter costs by 10% per completed level. Both chains clamp at a 20% minimum fuel-cost multiplier so late research rewards sustained investment without making propulsion free. `interstellar-dust-collection-productivity` increases scripted dust output by 8% per level, `quantum-replication-productivity` adds 4% productivity per level to replication recipes, and `fleet-coordination` improves the fleet-size speed bonus by 3% per level.
 
-Quantum replication includes recovery recipes for the interstellar fuel and science loops. A stranded platform that still has a powered quantum replicator and dust collection can convert dust into fusion power cells, antimatter, biter eggs, pentapod eggs, bioflux, Gleba crops, promethium asteroid chunks, and raw resources. This keeps fuel starvation and missing-source-material science stalls from becoming permanent once the player has built the intended interstellar infrastructure.
+Quantum replication includes recovery recipes for the interstellar fuel and science loops. A stranded platform that still has a powered quantum replicator and dust collection can convert dust into fusion power cells, antimatter, biter eggs, pentapod eggs, bioflux, Gleba crops, promethium asteroid chunks, advanced construction parts, and raw resources. This keeps fuel starvation and missing-source-material science stalls from becoming permanent once the player has built the intended interstellar infrastructure.
 
-`interstellar-dust-crushing` uses the Space Age `crushing` category so normal asteroid crushers can process dust. It consumes 100 dust, returns 60 dust, and independently rolls for metallic, carbonic, oxide, and rare promethium asteroid chunks. Productivity is disabled to avoid an infinite positive-feedback dust loop.
+`interstellar-dust-crushing` and `advanced-interstellar-dust-crushing` use the Space Age `crushing` category so normal asteroid crushers can process dust. The basic recipe consumes 100 dust, returns 60 dust, and independently rolls for metallic, carbonic, oxide, and rare promethium asteroid chunks. The advanced recipe consumes 200 dust, returns 120 dust, and improves chunk odds. Productivity is disabled on both recipes to avoid an infinite positive-feedback dust loop.
+
+`orbital-industry` unlocks interstellar foundry, electromagnetic plant, biochamber, and cryogenic plant variants. The mod copies the Space Age machines and clears their surface conditions instead of changing vanilla machines globally, so existing planet-locked buildings keep their normal rules while interstellar platforms get expensive dedicated versions. Their recipes use interstellar dust and resources unlocked through quantum replication, so a mature platform with a working replicator can rebuild them without importing the original planet-only machines.
 
 ## UPS Strategy
 

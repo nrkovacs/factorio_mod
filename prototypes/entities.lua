@@ -61,12 +61,32 @@ antimatter_drive.min_performance = table.deepcopy(data.raw.thruster.thruster.min
 antimatter_drive.max_performance = table.deepcopy(data.raw.thruster.thruster.max_performance)
 tint_sprite_definitions(antimatter_drive, {r = 0.78, g = 0.4, b = 1.0, a = 1.0})
 
+local space_foundry = copy_prototype("assembling-machine", "foundry", "interstellar-foundry")
+space_foundry.surface_conditions = nil
+tint_sprite_definitions(space_foundry, {r = 0.55, g = 0.9, b = 1.0, a = 1.0})
+
+local space_electromagnetic_plant = copy_prototype("assembling-machine", "electromagnetic-plant", "interstellar-electromagnetic-plant")
+space_electromagnetic_plant.surface_conditions = nil
+tint_sprite_definitions(space_electromagnetic_plant, {r = 0.75, g = 0.45, b = 1.0, a = 1.0})
+
+local space_biochamber = copy_prototype("assembling-machine", "biochamber", "interstellar-biochamber")
+space_biochamber.surface_conditions = nil
+tint_sprite_definitions(space_biochamber, {r = 0.45, g = 1.0, b = 0.65, a = 1.0})
+
+local space_cryogenic_plant = copy_prototype("assembling-machine", "cryogenic-plant", "interstellar-cryogenic-plant")
+space_cryogenic_plant.surface_conditions = nil
+tint_sprite_definitions(space_cryogenic_plant, {r = 0.55, g = 0.9, b = 1.0, a = 1.0})
+
 data:extend({
   lab,
   replicator,
   dust_collector,
   fusion_drive,
   antimatter_drive,
+  space_foundry,
+  space_electromagnetic_plant,
+  space_biochamber,
+  space_cryogenic_plant,
   {
     type = "item",
     name = "interstellar-lab",
@@ -115,6 +135,50 @@ data:extend({
     subgroup = "space-platform",
     order = "z[interstellar]-g[antimatter-drive]",
     place_result = "antimatter-drive",
+    stack_size = 10
+  },
+  {
+    type = "item",
+    name = "interstellar-foundry",
+    icon = space_foundry.icon,
+    icons = space_foundry.icons,
+    icon_size = space_foundry.icon_size or 64,
+    subgroup = "production-machine",
+    order = "z[interstellar]-h[foundry]",
+    place_result = "interstellar-foundry",
+    stack_size = 10
+  },
+  {
+    type = "item",
+    name = "interstellar-electromagnetic-plant",
+    icon = space_electromagnetic_plant.icon,
+    icons = space_electromagnetic_plant.icons,
+    icon_size = space_electromagnetic_plant.icon_size or 64,
+    subgroup = "production-machine",
+    order = "z[interstellar]-i[electromagnetic-plant]",
+    place_result = "interstellar-electromagnetic-plant",
+    stack_size = 10
+  },
+  {
+    type = "item",
+    name = "interstellar-biochamber",
+    icon = space_biochamber.icon,
+    icons = space_biochamber.icons,
+    icon_size = space_biochamber.icon_size or 64,
+    subgroup = "production-machine",
+    order = "z[interstellar]-j[biochamber]",
+    place_result = "interstellar-biochamber",
+    stack_size = 10
+  },
+  {
+    type = "item",
+    name = "interstellar-cryogenic-plant",
+    icon = space_cryogenic_plant.icon,
+    icons = space_cryogenic_plant.icons,
+    icon_size = space_cryogenic_plant.icon_size or 64,
+    subgroup = "production-machine",
+    order = "z[interstellar]-k[cryogenic-plant]",
+    place_result = "interstellar-cryogenic-plant",
     stack_size = 10
   }
 })

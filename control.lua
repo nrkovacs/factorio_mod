@@ -61,6 +61,10 @@ local function drive_efficiency_multiplier(force, technology_name, reduction_per
   return math.max(0.2, 1 - levels * reduction_per_level)
 end
 
+local function research_multiplier(force, technology_name, bonus_per_level)
+  return 1 + completed_research_levels(force, technology_name) * bonus_per_level
+end
+
 local function notify(player, message)
   if player and player.valid then
     player.print(message)
@@ -441,10 +445,11 @@ script.on_nth_tick(60, function()
       local fleet = get_fleet(platform)
       local surface = platform.surface
       local speed_bonus = math.max(0, fleet.size - 1)
+      local coordination_multiplier = research_multiplier(platform.force, "fleet-coordination", 0.03)
 
       if speed_bonus > 0 then
         surface.global_effect = {
-          speed = speed_bonus,
+          speed = speed_bonus * coordination_multiplier,
           consumption = speed_bonus
         }
       else
@@ -453,7 +458,8 @@ script.on_nth_tick(60, function()
 
       local collectors = count_entities(surface, {["interstellar-dust-collector"] = true})
       if collectors > 0 then
-        local dust = math.floor(math.max(1, collectors * fleet.size * fleet.speed_c * 25))
+        local dust_multiplier = research_multiplier(platform.force, "interstellar-dust-collection-productivity", 0.08)
+        local dust = math.floor(math.max(1, collectors * fleet.size * fleet.speed_c * 25 * dust_multiplier))
         insert_to_hub_or_ground(platform, {name = "interstellar-dust", count = dust})
       end
 
