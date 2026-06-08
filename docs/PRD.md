@@ -28,12 +28,15 @@ Interstellar Fleets is an endgame Space Age expansion focused on scaling very la
 - Interstellar platforms must have a dust-based path to recover key consumables, including fusion power cells, antimatter, biter eggs, biological science inputs, and promethium asteroid chunks.
 - A mature interstellar platform should be able to keep all infinite science research running by replicating missing source materials and producing science packs aboard the fleet.
 - Asteroid crushers should be able to reprocess interstellar dust into a partial dust return plus probabilistic asteroid chunks, including rare promethium chunks.
+- Mature interstellar platforms should be able to build space-safe variants of planet-specialized production machines instead of being permanently dependent on planet-only foundries, electromagnetic plants, biochambers, or cryogenic plants.
+- Post-Promethium progression should have distinct finite milestones for antimatter containment, xenobiology, advanced fabrication, orbital industry, and improved dust prospecting rather than unlocking every recovery path from one technology.
+- Infinite research should continue improving dust collection, quantum replication, and fleet coordination in addition to drive fuel efficiency.
 - Galactic Center is unlocked through the interstellar tech tree.
 
 ## Open Question Resolutions
 
 - Engine acquisition starts with stellar fusion drives, then antimatter drives through fleet printing.
 - Antimatter is created by quantum replication from interstellar dust and fusion power cells.
-- Replication has two tiers: basic dust conversion, then fleet printing with ship starter packs and antimatter propulsion.
+- Replication has multiple tiers: basic dust conversion, antimatter containment, xenobiology, quantum fabrication, orbital industry, deep dust prospecting, then fleet printing with ship starter packs and antimatter propulsion.
 - Speed is capped below light speed and uses a Lorentz-style curve for diminishing acceleration.
 - The tech tree starts after Promethium science to keep the mod firmly post-victory.

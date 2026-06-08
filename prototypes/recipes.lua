@@ -16,7 +16,11 @@ local replication_recipes = {
   {"replicate-bioflux", "bioflux", 200, 2},
   {"replicate-biter-egg", "biter-egg", 120, 1},
   {"replicate-pentapod-egg", "pentapod-egg", 240, 1},
-  {"replicate-promethium-asteroid-chunk", "promethium-asteroid-chunk", 300, 5}
+  {"replicate-promethium-asteroid-chunk", "promethium-asteroid-chunk", 300, 5},
+  {"replicate-processing-unit", "processing-unit", 160, 5},
+  {"replicate-low-density-structure", "low-density-structure", 200, 5},
+  {"replicate-superconductor", "superconductor", 240, 5},
+  {"replicate-quantum-processor", "quantum-processor", 500, 2}
 }
 
 local recipes = {
@@ -95,6 +99,61 @@ local recipes = {
   },
   {
     type = "recipe",
+    name = "interstellar-foundry",
+    enabled = false,
+    energy_required = 45,
+    ingredients = {
+      {type = "item", name = "interstellar-dust", amount = 500},
+      {type = "item", name = "calcite", amount = 100},
+      {type = "item", name = "quantum-processor", amount = 100},
+      {type = "item", name = "low-density-structure", amount = 200}
+    },
+    results = {{type = "item", name = "interstellar-foundry", amount = 1}}
+  },
+  {
+    type = "recipe",
+    name = "interstellar-electromagnetic-plant",
+    enabled = false,
+    energy_required = 45,
+    ingredients = {
+      {type = "item", name = "interstellar-dust", amount = 500},
+      {type = "item", name = "holmium-ore", amount = 100},
+      {type = "item", name = "quantum-processor", amount = 100},
+      {type = "item", name = "superconductor", amount = 200}
+    },
+    results = {{type = "item", name = "interstellar-electromagnetic-plant", amount = 1}}
+  },
+  {
+    type = "recipe",
+    name = "interstellar-biochamber",
+    enabled = false,
+    energy_required = 45,
+    ingredients = {
+      {type = "item", name = "interstellar-dust", amount = 500},
+      {type = "item", name = "bioflux", amount = 50},
+      {type = "item", name = "biter-egg", amount = 10},
+      {type = "item", name = "pentapod-egg", amount = 10},
+      {type = "item", name = "quantum-processor", amount = 100},
+      {type = "item", name = "low-density-structure", amount = 200}
+    },
+    results = {{type = "item", name = "interstellar-biochamber", amount = 1}}
+  },
+  {
+    type = "recipe",
+    name = "interstellar-cryogenic-plant",
+    enabled = false,
+    energy_required = 45,
+    ingredients = {
+      {type = "item", name = "interstellar-dust", amount = 500},
+      {type = "item", name = "ice", amount = 200},
+      {type = "item", name = "lithium", amount = 100},
+      {type = "item", name = "quantum-processor", amount = 100},
+      {type = "item", name = "superconductor", amount = 200}
+    },
+    results = {{type = "item", name = "interstellar-cryogenic-plant", amount = 1}}
+  },
+  {
+    type = "recipe",
     name = "dust-fusion-energy-cell",
     category = "interstellar-replication",
     enabled = false,
@@ -132,6 +191,28 @@ local recipes = {
       {type = "item", name = "carbonic-asteroid-chunk", amount = 1, probability = 0.15},
       {type = "item", name = "oxide-asteroid-chunk", amount = 1, probability = 0.15},
       {type = "item", name = "promethium-asteroid-chunk", amount = 1, probability = 0.05}
+    },
+    allow_productivity = false,
+    allow_decomposition = false
+  },
+  {
+    type = "recipe",
+    name = "advanced-interstellar-dust-crushing",
+    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
+    icon_size = 64,
+    category = "crushing",
+    subgroup = "space-crushing",
+    order = "z[interstellar]-b[advanced-dust-crushing]",
+    auto_recycle = false,
+    enabled = false,
+    energy_required = 8,
+    ingredients = {{type = "item", name = "interstellar-dust", amount = 200}},
+    results = {
+      {type = "item", name = "interstellar-dust", amount = 120},
+      {type = "item", name = "metallic-asteroid-chunk", amount = 1, probability = 0.3},
+      {type = "item", name = "carbonic-asteroid-chunk", amount = 1, probability = 0.3},
+      {type = "item", name = "oxide-asteroid-chunk", amount = 1, probability = 0.3},
+      {type = "item", name = "promethium-asteroid-chunk", amount = 1, probability = 0.12}
     },
     allow_productivity = false,
     allow_decomposition = false
