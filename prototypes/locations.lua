@@ -4,9 +4,9 @@ data:extend({
   {
     type = "space-location",
     name = "galactic-center",
-    icon = "__base__/graphics/icons/space-science-pack.png",
+    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
     icon_size = 64,
-    starmap_icon = "__base__/graphics/icons/space-science-pack.png",
+    starmap_icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
     starmap_icon_size = 64,
     distance = 1000000000,
     orientation = 0.72,
@@ -22,7 +22,7 @@ data:extend({
     from = route_from,
     to = "galactic-center",
     length = 1000000000,
-    icon = "__base__/graphics/icons/space-science-pack.png",
+    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
     icon_size = 64
   }
 })

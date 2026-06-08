@@ -2,8 +2,8 @@ data:extend({
   {
     type = "technology",
     name = "interstellar-fleets",
-    icon = "__space-age__/graphics/technology/promethium-science-pack.png",
-    icon_size = 256,
+    icon = "__interstellar-fleets__/graphics/technology/interstellar-fleets.png",
+    icon_size = 64,
     prerequisites = {"promethium-science-pack"},
     unit = {
       count = 2000,
@@ -32,8 +32,8 @@ data:extend({
   {
     type = "technology",
     name = "quantum-replication",
-    icon = "__space-age__/graphics/technology/quantum-processor.png",
-    icon_size = 256,
+    icon = "__interstellar-fleets__/graphics/technology/quantum-replication.png",
+    icon_size = 64,
     prerequisites = {"interstellar-fleets"},
     unit = {
       count = 3000,
@@ -72,8 +72,8 @@ data:extend({
   {
     type = "technology",
     name = "fleet-printing",
-    icon = "__space-age__/graphics/technology/foundation.png",
-    icon_size = 256,
+    icon = "__interstellar-fleets__/graphics/technology/fleet-printing.png",
+    icon_size = 64,
     prerequisites = {"quantum-replication"},
     unit = {
       count = 5000,

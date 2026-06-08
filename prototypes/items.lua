@@ -2,7 +2,8 @@ data:extend({
   {
     type = "item",
     name = "interstellar-dust",
-    icon = "__base__/graphics/icons/space-science-pack.png",
+    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
+    icon_size = 64,
     subgroup = "space-material",
     order = "z[interstellar]-a[dust]",
     stack_size = 1000
@@ -10,7 +11,8 @@ data:extend({
   {
     type = "item",
     name = "ship-starter-pack",
-    icon = "__space-age__/graphics/icons/space-platform-foundation.png",
+    icon = "__interstellar-fleets__/graphics/icons/ship-starter-pack.png",
+    icon_size = 64,
     subgroup = "space-platform",
     order = "z[interstellar]-b[ship-starter-pack]",
     stack_size = 10
