@@ -12,9 +12,9 @@ First, `Interstellar fleets` unlocks interstellar labs, interstellar dust collec
 
 Interstellar dust collectors gather `interstellar-dust` while installed on space platforms. Runtime dust income scales with the platform fleet size and current relativistic speed, so a consolidated fleet still behaves like many ships harvesting dust without requiring every duplicate ship to exist as a fully simulated platform.
 
-`Quantum replication` unlocks the quantum replicator and dust-based recipes for raw materials. Replicators convert interstellar dust into ores and other Space Age raw resources such as iron ore, copper ore, coal, stone, uranium ore, carbon, ice, scrap, calcite, tungsten ore, holmium ore, and lithium. This gives interstellar platforms a way to become more self-sufficient once they can sustain dust collection and energy production.
+`Quantum replication` unlocks the quantum replicator and dust-based recipes for raw materials. Replicators convert interstellar dust into ores and other Space Age raw resources such as iron ore, copper ore, coal, stone, uranium ore, carbon, ice, scrap, calcite, tungsten ore, holmium ore, lithium, yumako, jellynut, bioflux, biter eggs, pentapod eggs, and promethium asteroid chunks. They also create antimatter through an intentionally expensive recipe that consumes a large quantity of interstellar dust plus fusion power cells. This gives interstellar platforms a way to become more self-sufficient once they can sustain dust collection and energy production, including a way to bootstrap biological science inputs and biter eggs from scratch without importing them from Nauvis or Gleba.
 
-`Fleet printing` unlocks ship starter packs and antimatter drives. A ship starter pack represents the cost of adding one more matching platform to the fleet. Antimatter drives provide stronger acceleration than stellar fusion drives and push fleet travel further into the relativistic endgame.
+`Fleet printing` unlocks ship starter packs and antimatter drives. A ship starter pack represents the cost of adding one more matching platform to the fleet. Stellar fusion drives consume fusion power cells for dependable acceleration. Antimatter drives consume replicated antimatter and provide much stronger thrust, turning antimatter production into the premium fuel loop for high-speed interstellar travel.
 
 ## Fleet Consolidation
 
@@ -25,7 +25,7 @@ The interface exposes four actions:
 - `Merge ship`: consumes one `ship-starter-pack` from the platform hub and increases fleet size by one.
 - `Split fleet`: divides the current fleet roughly in half and creates a new platform for the split-off ships.
 - `Update blueprint`: records the current platform layout as the fleet's matching layout.
-- `Boost`: consumes fusion power cells to increase fleet speed based on installed drives.
+- `Boost`: consumes fusion power cells and/or antimatter to increase fleet speed based on installed drives.
 
 Merge protection is intentionally strict. The mod records a compact signature of the represented platform layout. If the platform changes after consolidation, further merging is blocked until you either update the blueprint or split the fleet. This prevents a fleet of supposedly identical ships from silently drifting out of sync with the one platform that Factorio is actually simulating.
 
@@ -34,13 +34,15 @@ Splitting a fleet clears partial crafting and research progress on the original 
 ## New Content
 
 - `Interstellar dust`: exotic deep-space material gathered by fleet collectors.
-- `Interstellar lab`: advanced research building whose productivity is boosted by fleet scaling.
+- `Interstellar lab`: advanced research building whose research speed is boosted by fleet scaling.
 - `Quantum replicator`: production machine for dust-to-resource conversion.
 - `Interstellar dust collector`: upgraded collector for deep-space dust harvesting.
 - `Stellar fusion drive`: blue-glow relativistic drive for fleet acceleration.
-- `Antimatter drive`: purple high-output drive with stronger acceleration.
+- `Antimatter`: expensive replicated drive fuel made from interstellar dust and fusion power cells, now represented by a distinct containment-capsule icon instead of reusing the antimatter drive art.
+- `Antimatter drive`: purple high-output drive with stronger acceleration and separate antimatter fuel.
 - `Ship starter pack`: expensive platform package consumed when merging ships into a fleet.
 - `Galactic Center`: a distant Space Age location and long-haul objective beyond normal platform logistics.
+- Expanded quantum replication inputs: yumako, jellynut, bioflux, pentapod eggs, and promethium asteroid chunks so mature platforms can continue all infinite science chains aboard interstellar fleets.
 
 ## Art Direction
 
@@ -59,7 +61,9 @@ Interstellar Fleets is deliberately late-game:
 - Research begins after Promethium science.
 - Recipes require expensive Space Age intermediates.
 - Fleet merging consumes ship starter packs instead of being free.
-- Acceleration consumes fusion power cells and becomes harder at high relativistic speed.
+- Fusion acceleration consumes fusion power cells; antimatter acceleration consumes expensive replicated antimatter.
+- Infinite drive-efficiency research reduces boost fuel costs over time: stellar fusion drive efficiency reduces fusion-cell cost by 8% per level, and antimatter drive efficiency reduces antimatter cost by 10% per level. Both efficiency chains floor at 20% of the original cost so high-speed travel remains a logistics problem.
+- Acceleration becomes harder at high relativistic speed.
 - The Galactic Center route is extremely long and low-solar, making ship design, fuel logistics, and fleet scaling matter.
 
 The goal is not to trivialize Space Age. The goal is to give mature megabases a new scaling problem after normal planetary expansion is solved.
@@ -67,8 +71,9 @@ The goal is not to trivialize Space Age. The goal is to give mature megabases a 
 ## Current Implementation Notes
 
 - Fleet state is stored in Factorio `storage` by platform index.
-- The represented platform receives surface-level productivity and speed effects based on fleet size.
+- The represented platform receives surface-level speed and energy-consumption effects based on fleet size, approximating the throughput and power draw of the abstract ships.
 - Dust collection and acceleration run periodically in `control.lua`.
+- Dust overflow is spilled near the platform hub instead of being deleted, so a full hub does not permanently waste the fleet's recovery resource.
 - Merge/split operations are exposed through a custom GUI and shortcut.
 - Platform layout matching uses a deterministic signature over non-character, non-resource entities.
 - Split fleets clone the represented platform layout when Factorio can create the destination platform.
@@ -83,3 +88,4 @@ The goal is not to trivialize Space Age. The goal is to give mature megabases a 
 - `control.lua`: runtime fleet state, GUI, merge/split, dust collection, acceleration, and fleet multipliers.
 - `docs/PRD.md`: product requirements derived from the original brainstorming conversation.
 - `docs/DESIGN.md`: implementation design for the current mod architecture.
+- `docs/VALIDATION.md`: command-line validation steps, soft-lock review, and balance notes.
