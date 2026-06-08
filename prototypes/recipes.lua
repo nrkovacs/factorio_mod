@@ -10,7 +10,13 @@ local replication_recipes = {
   {"replicate-calcite", "calcite", 40, 5},
   {"replicate-tungsten-ore", "tungsten-ore", 80, 5},
   {"replicate-holmium-ore", "holmium-ore", 80, 5},
-  {"replicate-lithium", "lithium", 80, 5}
+  {"replicate-lithium", "lithium", 80, 5},
+  {"replicate-yumako", "yumako", 100, 5},
+  {"replicate-jellynut", "jellynut", 100, 5},
+  {"replicate-bioflux", "bioflux", 200, 2},
+  {"replicate-biter-egg", "biter-egg", 120, 1},
+  {"replicate-pentapod-egg", "pentapod-egg", 240, 1},
+  {"replicate-promethium-asteroid-chunk", "promethium-asteroid-chunk", 300, 5}
 }
 
 local recipes = {
@@ -95,6 +101,18 @@ local recipes = {
     energy_required = 10,
     ingredients = {{type = "item", name = "interstellar-dust", amount = 50}},
     results = {{type = "item", name = "fusion-power-cell", amount = 1}}
+  },
+  {
+    type = "recipe",
+    name = "replicate-antimatter",
+    category = "interstellar-replication",
+    enabled = false,
+    energy_required = 120,
+    ingredients = {
+      {type = "item", name = "interstellar-dust", amount = 2000},
+      {type = "item", name = "fusion-power-cell", amount = 10}
+    },
+    results = {{type = "item", name = "antimatter", amount = 1}}
   }
 }
 

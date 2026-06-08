@@ -16,5 +16,14 @@ data:extend({
     subgroup = "space-platform",
     order = "z[interstellar]-b[ship-starter-pack]",
     stack_size = 10
+  },
+  {
+    type = "item",
+    name = "antimatter",
+    icon = "__interstellar-fleets__/graphics/icons/antimatter.png",
+    icon_size = 64,
+    subgroup = "space-material",
+    order = "z[interstellar]-c[antimatter]",
+    stack_size = 100
   }
 })

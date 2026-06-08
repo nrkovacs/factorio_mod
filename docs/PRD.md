@@ -21,12 +21,17 @@ Interstellar Fleets is an endgame Space Age expansion focused on scaling very la
 - Replicators convert interstellar dust into raw materials.
 - Interstellar labs allow research aboard deep-space platforms.
 - Interstellar drives allow acceleration toward a light-speed limit, with acceleration decreasing as speed approaches `c`.
-- Boosting consumes fusion power cells from the platform hub, with cost increasing by fleet size and Lorentz factor.
+- Stellar fusion drive boosting consumes fusion power cells from the platform hub, with cost increasing by fleet size and Lorentz factor.
+- Antimatter drive boosting consumes replicated antimatter from the platform hub and provides stronger acceleration than stellar fusion drives.
+- Infinite efficiency research must improve stellar fusion and antimatter drive fuel efficiency without removing fuel logistics entirely.
+- Interstellar platforms must have a dust-based path to recover key consumables, including fusion power cells, antimatter, biter eggs, biological science inputs, and promethium asteroid chunks.
+- A mature interstellar platform should be able to keep all infinite science research running by replicating missing source materials and producing science packs aboard the fleet.
 - Galactic Center is unlocked through the interstellar tech tree.
 
 ## Open Question Resolutions
 
 - Engine acquisition starts with stellar fusion drives, then antimatter drives through fleet printing.
-- Replication has two tiers: basic dust conversion, then fleet printing with ship starter packs.
+- Antimatter is created by quantum replication from interstellar dust and fusion power cells.
+- Replication has two tiers: basic dust conversion, then fleet printing with ship starter packs and antimatter propulsion.
 - Speed is capped below light speed and uses a Lorentz-style curve for diminishing acceleration.
 - The tech tree starts after Promethium science to keep the mod firmly post-victory.

@@ -25,8 +25,7 @@ local function get_fleet(platform)
     size = 1,
     speed_c = 0.01,
     distance_m = 0,
-    blueprint_hash = nil,
-    warning = false
+    blueprint_hash = nil
   }
   return storage.fleets[key]
 end
@@ -37,6 +36,31 @@ local function count_entities(surface, names)
     total = total + surface.count_entities_filtered({name = name})
   end
   return total
+end
+
+local function completed_research_levels(force, name)
+  local technology = force.technologies[name]
+  if not technology then
+    return 0
+  end
+  if technology.level and technology.level > 1 then
+    return technology.level - 1
+  end
+  if technology.researched then
+    return 1
+  end
+  return 0
+end
+
+local function drive_efficiency_multiplier(force, technology_name, reduction_per_level)
+  local levels = completed_research_levels(force, technology_name)
+  return math.max(0.2, 1 - levels * reduction_per_level)
+end
+
+local function notify(player, message)
+  if player and player.valid then
+    player.print(message)
+  end
 end
 
 local function platform_signature(surface, force)
@@ -59,7 +83,20 @@ local function insert_to_hub_or_ground(platform, stack)
   local hub = platform.hub
   if hub and hub.valid then
     local inserted = hub.insert(stack)
-    return inserted == stack.count
+    local remaining = stack.count - inserted
+    if remaining <= 0 then
+      return true
+    end
+
+    pcall(function()
+      hub.surface.spill_item_stack({
+        position = hub.position,
+        stack = {name = stack.name, count = remaining},
+        force = hub.force,
+        enable_looted = true
+      })
+    end)
+    return inserted > 0
   end
   return false
 end
@@ -70,6 +107,21 @@ local function each_platform(callback)
       callback(platform)
     end
   end
+end
+
+local function find_platform(platform_index)
+  local target = tonumber(platform_index)
+  if not target then
+    return nil
+  end
+
+  local found
+  each_platform(function(platform)
+    if platform.valid and platform.index == target then
+      found = platform
+    end
+  end)
+  return found
 end
 
 local function update_caption(player)
@@ -198,27 +250,27 @@ end
 local function merge_fleet(player, platform, fleet)
   local hub = platform.hub
   if not hub or not hub.valid then
-    player.print({"interstellar-fleets.no-hub"})
+    notify(player, {"interstellar-fleets.no-hub"})
     return
   end
   local signature = platform_signature(platform.surface, platform.force)
   if fleet.blueprint_hash and fleet.blueprint_hash ~= signature then
-    player.print({"interstellar-fleets.blueprint-mismatch"})
+    notify(player, {"interstellar-fleets.blueprint-mismatch"})
     return
   end
   if hub.get_item_count("ship-starter-pack") < 1 then
-    player.print({"interstellar-fleets.need-pack"})
+    notify(player, {"interstellar-fleets.need-pack"})
     return
   end
   fleet.blueprint_hash = signature
   hub.remove_item({name = "ship-starter-pack", count = 1})
   fleet.size = fleet.size + 1
-  player.print({"interstellar-fleets.merged", fleet.size})
+  notify(player, {"interstellar-fleets.merged", fleet.size})
 end
 
 local function split_fleet(player, platform, fleet)
   if fleet.size < 2 then
-    player.print({"interstellar-fleets.cannot-split"})
+    notify(player, {"interstellar-fleets.cannot-split"})
     return
   end
 
@@ -227,19 +279,22 @@ local function split_fleet(player, platform, fleet)
   clear_progress(platform.surface)
 
   local location = platform.space_location or platform.last_visited_space_location
-  local ok, new_platform = pcall(player.force.create_space_platform, player.force, {
-    name = platform.name .. " split",
-    planet = location and location.name or "nauvis",
-    starter_pack = "space-platform-starter-pack"
-  })
+  local force = player and player.valid and player.force or platform.force
+  local ok, new_platform = pcall(function()
+    return force.create_space_platform({
+      name = platform.name .. " split",
+      planet = location and location.name or "nauvis",
+      starter_pack = "space-platform-starter-pack"
+    })
+  end)
   if not ok or not new_platform then
     fleet.size = fleet.size + split_size
-    player.print({"interstellar-fleets.split-failed"})
+    notify(player, {"interstellar-fleets.split-failed"})
     return
   end
 
   pcall(function()
-    new_platform:apply_starter_pack()
+    new_platform.apply_starter_pack()
   end)
   clone_platform_layout(platform, new_platform)
 
@@ -249,41 +304,58 @@ local function split_fleet(player, platform, fleet)
   new_fleet.distance_m = fleet.distance_m
   new_fleet.blueprint_hash = fleet.blueprint_hash
 
-  player.print({"interstellar-fleets.split-complete", fleet.size, split_size})
+  notify(player, {"interstellar-fleets.split-complete", fleet.size, split_size})
 end
 
 local function boost_fleet(player, platform, fleet)
   local fusion_drives = count_entities(platform.surface, {["stellar-fusion-drive"] = true})
   local antimatter_drives = count_entities(platform.surface, {["antimatter-drive"] = true})
-  local drive_power = fusion_drives + antimatter_drives * 4
+  local fusion_drive_power = fusion_drives
+  local antimatter_drive_power = antimatter_drives * 4
+  local drive_power = fusion_drive_power + antimatter_drive_power
   if drive_power == 0 then
-    player.print({"interstellar-fleets.no-drives"})
+    notify(player, {"interstellar-fleets.no-drives"})
     return
   end
 
   local hub = platform.hub
   if not hub or not hub.valid then
-    player.print({"interstellar-fleets.no-hub"})
+    notify(player, {"interstellar-fleets.no-hub"})
     return
   end
 
   local gamma = 1 / math.sqrt(math.max(0.0001, 1 - fleet.speed_c * fleet.speed_c))
-  local energy_cost = math.max(1, math.ceil(fleet.size * gamma * drive_power))
-  if hub.get_item_count("fusion-power-cell") < energy_cost then
-    player.print({"interstellar-fleets.need-energy", energy_cost})
+  local fusion_efficiency = drive_efficiency_multiplier(platform.force, "stellar-fusion-drive-efficiency", 0.08)
+  local antimatter_efficiency = drive_efficiency_multiplier(platform.force, "antimatter-drive-efficiency", 0.1)
+  local fusion_cell_cost = fusion_drives > 0 and math.max(1, math.ceil(fleet.size * gamma * fusion_drive_power * fusion_efficiency)) or 0
+  local antimatter_cost = antimatter_drives > 0 and math.max(1, math.ceil(fleet.size * gamma * antimatter_drives * antimatter_efficiency)) or 0
+
+  if fusion_cell_cost > 0 and hub.get_item_count("fusion-power-cell") < fusion_cell_cost then
+    notify(player, {"interstellar-fleets.need-fusion-cells", fusion_cell_cost})
     return
   end
 
-  hub.remove_item({name = "fusion-power-cell", count = energy_cost})
+  if antimatter_cost > 0 and hub.get_item_count("antimatter") < antimatter_cost then
+    notify(player, {"interstellar-fleets.need-antimatter", antimatter_cost})
+    return
+  end
+
+  if fusion_cell_cost > 0 then
+    hub.remove_item({name = "fusion-power-cell", count = fusion_cell_cost})
+  end
+  if antimatter_cost > 0 then
+    hub.remove_item({name = "antimatter", count = antimatter_cost})
+  end
+
   local acceleration = drive_power * 0.00005 / gamma
   fleet.speed_c = math.min(0.999, fleet.speed_c + acceleration)
-  player.print({"interstellar-fleets.boosted", string.format("%.4f", fleet.speed_c), energy_cost})
+  notify(player, {"interstellar-fleets.boosted", string.format("%.4f", fleet.speed_c), fusion_cell_cost, antimatter_cost})
 end
 
 local function update_fleet_blueprint(player, platform, fleet)
   fleet.blueprint_hash = platform_signature(platform.surface, platform.force)
   clear_progress(platform.surface)
-  player.print({"interstellar-fleets.blueprint-updated"})
+  notify(player, {"interstellar-fleets.blueprint-updated"})
 end
 
 script.on_event(defines.events.on_gui_click, function(event)
@@ -353,3 +425,56 @@ script.on_nth_tick(60, function()
     update_caption(player)
   end
 end)
+
+remote.add_interface("interstellar-fleets", {
+  get_fleet = function(platform_index)
+    local platform = find_platform(platform_index)
+    if not platform then
+      return nil
+    end
+
+    local fleet = get_fleet(platform)
+    return {
+      size = fleet.size,
+      speed_c = fleet.speed_c,
+      distance_m = fleet.distance_m,
+      blueprint_hash = fleet.blueprint_hash
+    }
+  end,
+  merge = function(player_index, platform_index)
+    local player = player_index and game.get_player(player_index) or nil
+    local platform = find_platform(platform_index)
+    if not platform then
+      return false
+    end
+    merge_fleet(player, platform, get_fleet(platform))
+    return true
+  end,
+  split = function(player_index, platform_index)
+    local player = player_index and game.get_player(player_index) or nil
+    local platform = find_platform(platform_index)
+    if not platform then
+      return false
+    end
+    split_fleet(player, platform, get_fleet(platform))
+    return true
+  end,
+  update_blueprint = function(player_index, platform_index)
+    local player = player_index and game.get_player(player_index) or nil
+    local platform = find_platform(platform_index)
+    if not platform then
+      return false
+    end
+    update_fleet_blueprint(player, platform, get_fleet(platform))
+    return true
+  end,
+  boost = function(player_index, platform_index)
+    local player = player_index and game.get_player(player_index) or nil
+    local platform = find_platform(platform_index)
+    if not platform then
+      return false
+    end
+    boost_fleet(player, platform, get_fleet(platform))
+    return true
+  end
+})
