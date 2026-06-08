@@ -25,8 +25,12 @@ local function get_fleet(platform)
     size = 1,
     speed_c = 0.01,
     distance_m = 0,
-    blueprint_hash = nil
+    blueprint_hash = nil,
+    auto_boost = false
   }
+  if storage.fleets[key].auto_boost == nil then
+    storage.fleets[key].auto_boost = false
+  end
   return storage.fleets[key]
 end
 
@@ -142,6 +146,9 @@ local function update_caption(player)
     string.format("%.4f", fleet.speed_c),
     string.format("%.2f", fleet.distance_m / 1000000000)
   }
+  if root.interstellar_fleets_auto_boost then
+    root.interstellar_fleets_auto_boost.state = fleet.auto_boost
+  end
 end
 
 local function open_gui(player)
@@ -159,6 +166,7 @@ local function open_gui(player)
   controls.add({type = "button", name = "interstellar_fleets_split", caption = {"interstellar-fleets.split"}})
   controls.add({type = "button", name = "interstellar_fleets_update_blueprint", caption = {"interstellar-fleets.update-blueprint"}})
   controls.add({type = "button", name = "interstellar_fleets_boost", caption = {"interstellar-fleets.boost"}})
+  root.add({type = "checkbox", name = "interstellar_fleets_auto_boost", caption = {"interstellar-fleets.auto-boost"}, state = false})
   update_caption(player)
 end
 
@@ -307,21 +315,25 @@ local function split_fleet(player, platform, fleet)
   notify(player, {"interstellar-fleets.split-complete", fleet.size, split_size})
 end
 
-local function boost_fleet(player, platform, fleet)
+local function boost_fleet(player, platform, fleet, quiet)
   local fusion_drives = count_entities(platform.surface, {["stellar-fusion-drive"] = true})
   local antimatter_drives = count_entities(platform.surface, {["antimatter-drive"] = true})
   local fusion_drive_power = fusion_drives
   local antimatter_drive_power = antimatter_drives * 4
   local drive_power = fusion_drive_power + antimatter_drive_power
   if drive_power == 0 then
-    notify(player, {"interstellar-fleets.no-drives"})
-    return
+    if not quiet then
+      notify(player, {"interstellar-fleets.no-drives"})
+    end
+    return false
   end
 
   local hub = platform.hub
   if not hub or not hub.valid then
-    notify(player, {"interstellar-fleets.no-hub"})
-    return
+    if not quiet then
+      notify(player, {"interstellar-fleets.no-hub"})
+    end
+    return false
   end
 
   local gamma = 1 / math.sqrt(math.max(0.0001, 1 - fleet.speed_c * fleet.speed_c))
@@ -331,13 +343,17 @@ local function boost_fleet(player, platform, fleet)
   local antimatter_cost = antimatter_drives > 0 and math.max(1, math.ceil(fleet.size * gamma * antimatter_drives * antimatter_efficiency)) or 0
 
   if fusion_cell_cost > 0 and hub.get_item_count("fusion-power-cell") < fusion_cell_cost then
-    notify(player, {"interstellar-fleets.need-fusion-cells", fusion_cell_cost})
-    return
+    if not quiet then
+      notify(player, {"interstellar-fleets.need-fusion-cells", fusion_cell_cost})
+    end
+    return false
   end
 
   if antimatter_cost > 0 and hub.get_item_count("antimatter") < antimatter_cost then
-    notify(player, {"interstellar-fleets.need-antimatter", antimatter_cost})
-    return
+    if not quiet then
+      notify(player, {"interstellar-fleets.need-antimatter", antimatter_cost})
+    end
+    return false
   end
 
   if fusion_cell_cost > 0 then
@@ -349,7 +365,10 @@ local function boost_fleet(player, platform, fleet)
 
   local acceleration = drive_power * 0.00005 / gamma
   fleet.speed_c = math.min(0.999, fleet.speed_c + acceleration)
-  notify(player, {"interstellar-fleets.boosted", string.format("%.4f", fleet.speed_c), fusion_cell_cost, antimatter_cost})
+  if not quiet then
+    notify(player, {"interstellar-fleets.boosted", string.format("%.4f", fleet.speed_c), fusion_cell_cost, antimatter_cost})
+  end
+  return true
 end
 
 local function update_fleet_blueprint(player, platform, fleet)
@@ -390,6 +409,30 @@ script.on_event(defines.events.on_gui_click, function(event)
   end
 end)
 
+script.on_event(defines.events.on_gui_checked_state_changed, function(event)
+  local element = event.element
+  if not element or not element.valid or element.name ~= "interstellar_fleets_auto_boost" then
+    return
+  end
+
+  local player = game.get_player(event.player_index)
+  if not player then
+    return
+  end
+
+  local platform = get_platform_for_player(player)
+  if not platform then
+    player.print({"interstellar-fleets.no-platform"})
+    element.state = false
+    return
+  end
+
+  local fleet = get_fleet(platform)
+  fleet.auto_boost = element.state
+  player.print(fleet.auto_boost and {"interstellar-fleets.auto-boost-enabled"} or {"interstellar-fleets.auto-boost-disabled"})
+  update_caption(player)
+end)
+
 script.on_nth_tick(60, function()
   init_storage()
 
@@ -412,6 +455,10 @@ script.on_nth_tick(60, function()
       if collectors > 0 then
         local dust = math.floor(math.max(1, collectors * fleet.size * fleet.speed_c * 25))
         insert_to_hub_or_ground(platform, {name = "interstellar-dust", count = dust})
+      end
+
+      if fleet.auto_boost then
+        boost_fleet(nil, platform, fleet, true)
       end
 
       local drives = count_entities(surface, {["stellar-fusion-drive"] = true, ["antimatter-drive"] = true})
@@ -438,7 +485,8 @@ remote.add_interface("interstellar-fleets", {
       size = fleet.size,
       speed_c = fleet.speed_c,
       distance_m = fleet.distance_m,
-      blueprint_hash = fleet.blueprint_hash
+      blueprint_hash = fleet.blueprint_hash,
+      auto_boost = fleet.auto_boost
     }
   end,
   merge = function(player_index, platform_index)
@@ -475,6 +523,14 @@ remote.add_interface("interstellar-fleets", {
       return false
     end
     boost_fleet(player, platform, get_fleet(platform))
+    return true
+  end,
+  set_auto_boost = function(platform_index, enabled)
+    local platform = find_platform(platform_index)
+    if not platform then
+      return false
+    end
+    get_fleet(platform).auto_boost = enabled and true or false
     return true
   end
 })

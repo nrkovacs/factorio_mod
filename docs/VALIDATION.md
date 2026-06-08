@@ -20,8 +20,9 @@ Passing these checks proves the data stage loads, all prototypes resolve, contro
 
 Latest local run on 2026-06-07:
 
-- `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-science-test.zip`: passed with exit code 0.
-- `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-science-test.zip --benchmark-ticks 600`: passed with exit code 0, averaging 0.089 ms/update.
+- `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-final-review-test.zip`: passed with exit code 0.
+- `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-final-review-test.zip --benchmark-ticks 600`: passed with exit code 0, averaging 0.100 ms/update.
+- `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-final-auto-boost-scripted.zip --benchmark-ticks 300`: passed with exit code 0 using the auto-boost validation companion mod.
 - `--start-server C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-scripted-validation.zip --until-tick 360`: passed with exit code 0 using the validation companion mod.
 
 ## Soft-Lock Review
@@ -31,8 +32,9 @@ The intended recovery loop is:
 1. Interstellar dust collectors script-generate `interstellar-dust` on fleet platforms.
 2. Full hubs spill excess dust near the hub instead of deleting it.
 3. Quantum replicators convert dust into raw resources, `fusion-power-cell`, `antimatter`, `biter-egg`, `pentapod-egg`, `bioflux`, Gleba crops, and `promethium-asteroid-chunk`.
-4. Fusion drives consume `fusion-power-cell`; antimatter drives consume `antimatter`.
-5. Efficiency research lowers drive fuel cost but clamps at 20% of base cost.
+4. Asteroid crushers can process dust through `interstellar-dust-crushing`, returning some dust and probabilistically producing asteroid chunks including rare promethium chunks.
+5. Fusion drives consume `fusion-power-cell`; antimatter drives consume `antimatter`; auto boost can consume these fuels once per second without manual clicks.
+6. Efficiency research lowers drive fuel cost but clamps at 20% of base cost.
 
 This means a platform with a valid hub, at least one collector, power, and a quantum replicator can recover the critical consumables needed for interstellar progress. A platform with no hub, no collector, no power, or no replicator still needs player logistics intervention; those are normal Factorio construction failures rather than unrecoverable scripted fleet-state failures.
 

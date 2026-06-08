@@ -39,9 +39,13 @@ Splitting halves fleet size, clears partial progress on production entities, cre
 
 Boosting counts stellar fusion drives and antimatter drives, consumes the matching fuel from the platform hub, then applies diminishing acceleration using the current Lorentz factor. Stellar fusion drives add one drive-power unit each and consume `fusion-power-cell`; antimatter drives add four drive-power units each and consume `antimatter`.
 
+Players can either click `Boost` manually or enable `Auto boost` in the fleet GUI. Auto boost attempts the same boost calculation once per second, consumes fuel only when a boost succeeds, and pauses quietly when drives or fuel are missing. This keeps acceleration automatable without accidentally deleting fuel or spamming warnings.
+
 Two infinite technologies reduce boost fuel costs. `stellar-fusion-drive-efficiency` reduces fusion power cell costs by 8% per completed level, and `antimatter-drive-efficiency` reduces antimatter costs by 10% per completed level. Both chains clamp at a 20% minimum fuel-cost multiplier so late research rewards sustained investment without making propulsion free.
 
 Quantum replication includes recovery recipes for the interstellar fuel and science loops. A stranded platform that still has a powered quantum replicator and dust collection can convert dust into fusion power cells, antimatter, biter eggs, pentapod eggs, bioflux, Gleba crops, promethium asteroid chunks, and raw resources. This keeps fuel starvation and missing-source-material science stalls from becoming permanent once the player has built the intended interstellar infrastructure.
+
+`interstellar-dust-crushing` uses the Space Age `crushing` category so normal asteroid crushers can process dust. It consumes 100 dust, returns 60 dust, and independently rolls for metallic, carbonic, oxide, and rare promethium asteroid chunks. Productivity is disabled to avoid an infinite positive-feedback dust loop.
 
 ## UPS Strategy
 

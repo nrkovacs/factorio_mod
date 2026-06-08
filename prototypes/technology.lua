@@ -84,6 +84,21 @@ data:extend({
   },
   {
     type = "technology",
+    name = "interstellar-dust-crushing",
+    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
+    icon_size = 64,
+    prerequisites = {"quantum-replication"},
+    unit = {
+      count = 2500,
+      ingredients = late_science,
+      time = 60
+    },
+    effects = {
+      {type = "unlock-recipe", recipe = "interstellar-dust-crushing"}
+    }
+  },
+  {
+    type = "technology",
     name = "stellar-fusion-drive-efficiency",
     icon = "__interstellar-fleets__/graphics/technology/interstellar-fleets.png",
     icon_size = 64,

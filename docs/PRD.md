@@ -23,9 +23,11 @@ Interstellar Fleets is an endgame Space Age expansion focused on scaling very la
 - Interstellar drives allow acceleration toward a light-speed limit, with acceleration decreasing as speed approaches `c`.
 - Stellar fusion drive boosting consumes fusion power cells from the platform hub, with cost increasing by fleet size and Lorentz factor.
 - Antimatter drive boosting consumes replicated antimatter from the platform hub and provides stronger acceleration than stellar fusion drives.
+- Boosting should be automatable so players are not required to repeatedly click a button once the fuel loop is built.
 - Infinite efficiency research must improve stellar fusion and antimatter drive fuel efficiency without removing fuel logistics entirely.
 - Interstellar platforms must have a dust-based path to recover key consumables, including fusion power cells, antimatter, biter eggs, biological science inputs, and promethium asteroid chunks.
 - A mature interstellar platform should be able to keep all infinite science research running by replicating missing source materials and producing science packs aboard the fleet.
+- Asteroid crushers should be able to reprocess interstellar dust into a partial dust return plus probabilistic asteroid chunks, including rare promethium chunks.
 - Galactic Center is unlocked through the interstellar tech tree.
 
 ## Open Question Resolutions
