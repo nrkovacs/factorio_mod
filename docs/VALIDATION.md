@@ -60,6 +60,17 @@ Latest hero-detail art pass on 2026-06-09:
 - `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-hero-art.zip`: passed with exit code 0 after rebuilding the hero-detail art zip.
 - `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-hero-art.zip --benchmark-ticks 600 --benchmark-verbose all`: passed with exit code 0, averaging 0.098 ms/update.
 
+Latest interstellar lab reference-match pass on 2026-06-09:
+
+- Downloaded and reviewed `graphics/previews/Interstellar_lab_reference.mp4`; the reference shows a space-platform lab with solar wings, satellite dishes, a glass research dome, purple research pulse, teal conduit glow, and steam plumes.
+- Updated the Blender lab render to use a platform deck, readable solar-panel wings, larger dish antennas, teal deck traces, a hex-pattern research dome, a purple pulse cycle, and late-frame steam puffs.
+- Generated `sound/interstellar-lab-working.ogg` as a short looping industrial research hum with scanner tones, dome pulse overtones, relay clicks, and steam hiss.
+- `C:\tmp\blender-portable\blender-4.5.9-windows-x64\blender.exe --background --python scripts\blender_render_assets.py -- --variant production --out tmp\blender-renders interstellar-lab`: passed after rerendering the lab frames.
+- `C:\Users\nrkov\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe scripts\pack_blender_assets.py`: passed after packing the updated lab sprite sheet, glow mask, icon, technology image, preview GIF, and art preview sheet.
+- `C:\Users\nrkov\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe scripts\validate_art_assets.py`: passed, including the new OGG sound asset check.
+- `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1`: passed and rebuilt `dist\interstellar-fleets_0.1.0.zip` with the `sound` folder included.
+- `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-lab-reference-test.zip`: passed with exit code 0 using the rebuilt package from `dist`.
+
 ## Soft-Lock Review
 
 The intended recovery loop is:

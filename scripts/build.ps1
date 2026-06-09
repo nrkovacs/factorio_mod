@@ -18,6 +18,7 @@ $paths = @(
   "graphics",
   "locale",
   "prototypes",
+  "sound",
   "wiki"
 )
 

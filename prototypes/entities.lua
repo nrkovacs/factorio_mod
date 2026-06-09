@@ -55,6 +55,16 @@ lab.surface_conditions = nil
 tint_sprite_definitions(lab, {r = 0.55, g = 0.9, b = 1.0, a = 1.0})
 lab.on_animation = custom_animation("interstellar-lab")
 lab.off_animation = custom_animation("interstellar-lab")
+lab.working_sound = {
+  sound = {
+    filename = "__interstellar-fleets__/sound/interstellar-lab-working.ogg",
+    volume = 0.72
+  },
+  apparent_volume = 1.2,
+  audible_distance_modifier = 0.7,
+  fade_in_ticks = 20,
+  fade_out_ticks = 40
+}
 
 local replicator = copy_prototype("assembling-machine", "assembling-machine-3", "quantum-replicator")
 replicator.icon = "__interstellar-fleets__/graphics/icons/quantum-replicator.png"
