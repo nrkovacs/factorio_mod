@@ -37,6 +37,17 @@ Latest Blender-rendered art run on 2026-06-09:
 - `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-blender-art.zip`: passed with exit code 0 after rebuilding the release zip with Blender-rendered art.
 - `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-blender-art.zip --benchmark-ticks 600 --benchmark-verbose all`: passed with exit code 0, averaging 0.097 ms/update.
 
+Latest Blender art refinement pass on 2026-06-09:
+
+- Reviewed the existing preview sheet against Factorio's industrial visual style. The first Blender assets were readable but too clean and toy-like at icon scale.
+- Generated A/B loop 1: `a-industrial` versus `b-arcology`. The industrial version fit Factorio better, but both needed stronger building-specific silhouettes.
+- Generated A/B loop 2: `c-hero-industrial` versus `d-hero-neon`. `c-hero-industrial` won because it had better gritty mass, denser greebles, and clearer silhouettes; `d-hero-neon` was readable but too clean.
+- Generated loop 3 final production hybrid using `c-hero-industrial` as the base, with brighter highlights and sharper post-processing for small icon readability.
+- Final preview sheets were saved under `tmp\art-ab\` during local review and the selected production assets were packed into `graphics\`.
+- `C:\Users\nrkov\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe scripts\validate_art_assets.py`: passed after final art refinement.
+- `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-art-refinement.zip`: passed with exit code 0 after rebuilding the final refined art zip.
+- `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-art-refinement.zip --benchmark-ticks 600 --benchmark-verbose all`: passed with exit code 0, averaging 0.083 ms/update.
+
 ## Soft-Lock Review
 
 The intended recovery loop is:
