@@ -54,16 +54,18 @@ Splitting a fleet clears partial crafting and research progress on the original 
 
 ## Art Direction
 
-The mod now includes generated custom artwork for its thumbnail, item icons, technology icons, entity sprite sheets, and review animations:
+The mod now includes custom artwork for its thumbnail, item icons, technology icons, entity sprite sheets, and review animations. The newest assets are rendered with Blender CLI from procedural 3D models, then packed into Factorio-sized sprites:
 
 - `thumbnail.png` shows an industrial fleet approaching a bright galactic core.
 - `graphics/icons/` contains distinct generated icons for dust, starter packs, antimatter, labs, replicators, drives, and all interstellar platform machines.
 - `graphics/technology/` contains dedicated generated technology art for every custom technology.
-- `graphics/entity/` contains transparent 4-frame sprite sheets for the custom animated buildings.
+- `graphics/entity/` contains transparent 4-frame sprite sheets for the custom animated buildings rendered from isometric Blender frames.
 - `graphics/previews/` contains animated GIF previews so sprite-sheet animations can be reviewed from GitHub without launching Factorio.
 - `wiki/art-review.html` displays the GIF previews in one browser-friendly review page.
+- `scripts/blender_render_assets.py` builds and renders the procedural 3D models.
+- `scripts/pack_blender_assets.py` crops, scales, and packs those renders into icons, technology art, sprite sheets, glow masks, GIF previews, and the preview sheet.
 
-The quantum replicator, interstellar lab, and interstellar platform production machines use custom generated sprite sheets in-game. Drives and dust collectors keep the reliable Space Age entity geometry while using custom icons and review GIFs, because their entity prototypes have specialized animation schemas. I did not reuse images or animations from third-party mods because their licenses are unknown; the implementation sticks to generated art plus Factorio/Space Age dependency assets.
+The quantum replicator, interstellar lab, and interstellar platform production machines use custom Blender-rendered sprite sheets in-game. Drives and dust collectors keep the reliable Space Age entity geometry while using custom icons and review GIFs, because their entity prototypes have specialized animation schemas. I did not reuse images or animations from third-party mods because their licenses are unknown; the implementation sticks to generated art plus Factorio/Space Age dependency assets.
 
 ## Balance Intent
 

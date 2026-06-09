@@ -29,6 +29,14 @@ Latest local run on 2026-06-08:
 - `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-custom-art.zip`: passed with exit code 0 after custom sprite-sheet integration.
 - `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-custom-art.zip --benchmark-ticks 600`: passed with exit code 0, averaging 0.103 ms/update.
 
+Latest Blender-rendered art run on 2026-06-09:
+
+- `C:\tmp\blender-portable\blender-4.5.9-windows-x64\blender.exe --background --factory-startup --python scripts\blender_render_assets.py`: passed, rendering 36 transparent isometric frames for 9 custom assets.
+- `C:\Users\nrkov\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe scripts\pack_blender_assets.py`: passed, packing Blender frames into icons, technology art, sprite sheets, glow masks, GIF previews, and `graphics/art-preview-sheet.png`.
+- `C:\Users\nrkov\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe scripts\validate_art_assets.py`: passed, confirming all generated art dimensions and four-frame preview GIFs.
+- `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-blender-art.zip`: passed with exit code 0 after rebuilding the release zip with Blender-rendered art.
+- `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-blender-art.zip --benchmark-ticks 600 --benchmark-verbose all`: passed with exit code 0, averaging 0.097 ms/update.
+
 ## Soft-Lock Review
 
 The intended recovery loop is:
