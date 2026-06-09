@@ -23,14 +23,17 @@ local function tint_sprite_definitions(value, tint)
 end
 
 local function custom_animation(name, draw_as_glow)
+  local size = name == "interstellar-lab" and 256 or 128
+  local scale = name == "interstellar-lab" and 0.34 or 0.5
+
   return {
     filename = "__interstellar-fleets__/graphics/entity/" .. name .. "/" .. name .. (draw_as_glow and "-glow.png" or "-animation.png"),
-    width = 128,
-    height = 128,
+    width = size,
+    height = size,
     frame_count = 4,
     line_length = 4,
     animation_speed = 0.25,
-    scale = 0.5,
+    scale = scale,
     shift = {0, 0},
     draw_as_glow = draw_as_glow or nil,
     blend_mode = draw_as_glow and "additive" or nil
