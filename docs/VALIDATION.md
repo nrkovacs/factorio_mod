@@ -48,6 +48,18 @@ Latest Blender art refinement pass on 2026-06-09:
 - `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-art-refinement.zip`: passed with exit code 0 after rebuilding the final refined art zip.
 - `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-art-refinement.zip --benchmark-ticks 600 --benchmark-verbose all`: passed with exit code 0, averaging 0.083 ms/update.
 
+Latest hero-detail art pass on 2026-06-09:
+
+- Added more artistically distinctive Blender geometry while keeping the silhouettes readable at Factorio icon scale.
+- Interstellar labs gained sensor clusters, side radiators, a screen, and an observatory dish so they read as deep-space research infrastructure.
+- Quantum replicators gained a larger matter gate, crystal cluster, side radiators, and orbiting particles so they read as exotic material printers.
+- Dust collectors gained a wider dust-net ring, collector mast, and solar wing panels so they read as active deep-space harvesting equipment.
+- Drives gained keel fins, heat shields, exhaust rings, and plasma feathers to make fusion and antimatter propulsion feel more powerful.
+- Platform machines gained stronger identity details: foundry cranes and ore loader, electromagnetic coil bindings and diagonal arcs, biochamber nutrient tanks and glass equator, and cryogenic center tank plus frost crystals.
+- `C:\Users\nrkov\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe scripts\validate_art_assets.py`: passed after the hero-detail art pass.
+- `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-hero-art.zip`: passed with exit code 0 after rebuilding the hero-detail art zip.
+- `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-hero-art.zip --benchmark-ticks 600 --benchmark-verbose all`: passed with exit code 0, averaging 0.098 ms/update.
+
 ## Soft-Lock Review
 
 The intended recovery loop is:

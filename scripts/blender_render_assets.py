@@ -142,6 +142,25 @@ def add_torus(name, location, major_radius, minor_radius, mat, rotation=(0, 0, 0
     return obj
 
 
+def add_cone(name, location, radius1, radius2, depth, mat, vertices=5, rotation=(0, 0, 0)):
+    bpy.ops.mesh.primitive_cone_add(
+        vertices=vertices,
+        radius1=radius1,
+        radius2=radius2,
+        depth=depth,
+        location=location,
+        rotation=rotation,
+    )
+    obj = bpy.context.object
+    obj.name = name
+    obj.data.materials.append(mat)
+    bevel = obj.modifiers.new("facet bevel", "BEVEL")
+    bevel.width = 0.015
+    bevel.segments = 1
+    obj.modifiers.new("weighted normals", "WEIGHTED_NORMAL")
+    return obj
+
+
 def add_bolt_ring(mat, z=0.34, radius=0.94, count=8):
     for i in range(count):
         angle = i * math.tau / count
@@ -166,6 +185,37 @@ def add_machine_greebles(primary, accent, dark, trim, rust):
             add_panel("side_rib_l", (-0.96, y, 0.54), (0.08, 0.08, 0.4), trim)
             add_panel("side_rib_r", (0.96, y, 0.54), (0.08, 0.08, 0.4), trim)
     add_panel("energy_status", (0, -0.895, 1.02), (0.42, 0.05, 0.08), accent)
+    for x in (-0.38, 0.38):
+        add_panel("hazard_mark", (x, -0.91, 0.25), (0.2, 0.035, 0.045), rust)
+
+
+def add_radiator_bank(side: float, primary, trim, accent):
+    add_panel("radiator_back", (side * 1.08, 0.06, 0.88), (0.08, 1.1, 0.55), trim)
+    for index, y in enumerate((-0.42, -0.18, 0.06, 0.30, 0.54)):
+        add_panel("radiator_fin", (side * 1.18, y, 0.88), (0.08, 0.13, 0.48), primary if index % 2 else trim)
+    add_uv_sphere("radiator_pin", (side * 1.22, -0.58, 1.17), 0.04, accent)
+
+
+def add_sensor_cluster(accent, trim):
+    for index, x in enumerate((-0.56, -0.28, 0.28, 0.56)):
+        add_cylinder("sensor_stalk", (x, 0.58, 1.35 + 0.05 * (index % 2)), 0.018, 0.34, trim)
+        add_uv_sphere("sensor_eye", (x, 0.58, 1.55 + 0.05 * (index % 2)), 0.05, accent)
+
+
+def add_crystal_cluster(accent, trim, origin=(0, 0, 1.45), scale=1.0):
+    offsets = [(-0.16, 0.02, 0.0, 0.22), (0.0, -0.02, 0.08, 0.28), (0.17, 0.04, 0.02, 0.2)]
+    for x, y, z, height in offsets:
+        add_cone(
+            "crystal_shard",
+            (origin[0] + x * scale, origin[1] + y * scale, origin[2] + z * scale),
+            0.07 * scale,
+            0.015 * scale,
+            height * scale,
+            accent,
+            vertices=5,
+            rotation=(0.18, 0.08, 0.4),
+        )
+    add_panel("crystal_mount", (origin[0], origin[1], origin[2] - 0.14 * scale), (0.48 * scale, 0.28 * scale, 0.07 * scale), trim)
 
 
 def setup_scene():
@@ -223,22 +273,31 @@ def build_asset(name: str, frame: int):
         add_torus("energy_ring", (0, -0.15, 1.26), 0.48, 0.035, primary, rotation=(0.35, 0.15, angle))
         add_uv_sphere("core", (0, -0.15, 1.25), 0.42, accent)
         add_cylinder("core_socket", (0, -0.15, 1.08), 0.5, 0.12, trim)
+        add_radiator_bank(-1, primary, trim, accent)
+        add_radiator_bank(1, primary, trim, accent)
         for i in range(6):
             a = angle + i * math.tau / 6
             add_cylinder("core_arm", (math.cos(a) * 0.55, math.sin(a) * 0.55, 1.18), 0.04, 0.58, primary, vertices=16, rotation=(math.pi / 2, 0, a))
         if kind == "replicator":
             add_torus("matter_ring", (0, -0.15, 1.42), 0.32, 0.025, accent, rotation=(math.pi / 2, 0, -angle))
+            add_torus("outer_matter_gate", (0, -0.15, 1.42), 0.56, 0.02, primary, rotation=(math.pi / 2, 0, angle * 0.5))
+            add_crystal_cluster(accent, trim, origin=(0, -0.2, 1.72), scale=0.75)
             for i in range(3):
                 a = angle * 0.5 + i * math.tau / 3
                 add_uv_sphere("replication_particle", (math.cos(a) * 0.36, math.sin(a) * 0.36 - 0.15, 1.58), 0.055, accent)
         else:
             add_panel("lab_screen", (0, -0.92, 1.2), (0.64, 0.05, 0.18), accent)
+            add_sensor_cluster(accent, trim)
+            add_torus("observatory_dish", (0, 0.52, 1.52), 0.28, 0.018, trim, rotation=(1.15, 0, 0))
             for x in (-0.34, 0.34):
                 add_cylinder("lab_antenna", (x, 0.42, 1.4), 0.025, 0.56, trim)
                 add_uv_sphere("lab_beacon", (x, 0.42, 1.72), 0.075, accent)
     elif kind == "collector":
         add_cylinder("collector_mast", (0, -0.05, 1.24), 0.075, 0.78, trim)
         add_torus("collector_field", (0, -0.05, 1.42), 0.5, 0.018, accent, rotation=(0.2, 0.7, angle))
+        add_torus("wide_dust_net", (0, -0.05, 1.2), 0.78, 0.014, primary, rotation=(0.35, 0.8, -angle))
+        for x in (-0.48, 0.48):
+            add_panel("collector_solar_wing", (x, 0.64, 0.95), (0.42, 0.08, 0.32), primary)
         for i in range(4):
             a = angle + i * math.tau / 4
             add_cylinder("collector_arm", (math.cos(a) * 0.62, math.sin(a) * 0.62, 1.08), 0.055, 1.2, primary, vertices=16, rotation=(math.pi / 2, 0, a))
@@ -250,10 +309,14 @@ def build_asset(name: str, frame: int):
         add_cylinder("thruster_glow", (0, -1.18, 0.62), 0.26 + frame * 0.02, 0.16, accent, rotation=(math.pi / 2, 0, 0))
         add_cube("wing_l", (-0.78, 0.05, 0.72), (0.5, 1.25, 0.18), primary)
         add_cube("wing_r", (0.78, 0.05, 0.72), (0.5, 1.25, 0.18), primary)
+        for side in (-1, 1):
+            add_cone("drive_keel", (side * 0.9, 0.15, 1.0), 0.18, 0.02, 0.55, trim, vertices=3, rotation=(0, math.pi / 2, side * 0.55))
+            add_panel("drive_heat_shield", (side * 0.86, -0.62, 0.35), (0.32, 0.22, 0.08), rust)
         add_cylinder("fuel_line_l", (-0.42, -0.06, 1.04), 0.04, 0.86, trim, vertices=16, rotation=(math.pi / 2, 0, 0))
         add_cylinder("fuel_line_r", (0.42, -0.06, 1.04), 0.04, 0.86, trim, vertices=16, rotation=(math.pi / 2, 0, 0))
         for x in (-0.48, 0, 0.48):
             add_cylinder("exhaust_ring", (x, -1.07, 0.62), 0.11, 0.1, rust, vertices=24, rotation=(math.pi / 2, 0, 0))
+            add_cone("plasma_feather", (x, -1.24, 0.62), 0.05 + 0.01 * frame, 0.17, 0.32, accent, vertices=24, rotation=(math.pi / 2, 0, 0))
         add_torus("drive_containment", (0, -0.02, 1.06), 0.42, 0.035, accent, rotation=(0.1, 0.7, angle))
     elif kind == "foundry":
         add_cylinder("furnace", (0, -0.1, 1.2), 0.48, 0.55, primary)
@@ -261,26 +324,38 @@ def build_asset(name: str, frame: int):
         add_cylinder("chimney_l", (-0.54, 0.28, 1.28), 0.12, 0.62, dark)
         add_cylinder("chimney_r", (0.54, 0.28, 1.18), 0.1, 0.48, dark)
         add_torus("molten_lip", (0, -0.1, 1.46), 0.42, 0.035, rust)
+        for x in (-0.44, 0.44):
+            add_cone("slag_crane", (x, -0.46, 1.42), 0.055, 0.02, 0.5, trim, vertices=4, rotation=(0.25, 0.1, x))
+            add_uv_sphere("slag_drop", (x * 0.8, -0.58, 1.12), 0.07, accent)
+        add_panel("ore_loader", (0, 0.72, 0.92), (1.0, 0.18, 0.22), rust)
     elif kind == "electromagnetic":
         for x in (-0.45, 0, 0.45):
             add_cylinder("coil", (x, -0.08, 1.2), 0.22, 0.5, primary, rotation=(math.pi / 2, 0, 0))
             add_cylinder("coil_core", (x, -0.08, 1.2), 0.1, 0.58, trim, vertices=24, rotation=(math.pi / 2, 0, 0))
+            add_torus("coil_binding", (x, -0.08, 1.2), 0.24, 0.012, rust, rotation=(math.pi / 2, 0, angle))
         add_cylinder("arc", (0, -0.08, 1.2), 0.08, 1.25, accent, rotation=(0, math.pi / 2, angle))
+        add_cylinder("diagonal_arc", (0, -0.08, 1.32), 0.035, 1.05, accent, vertices=16, rotation=(0.7, math.pi / 2, -angle))
         for x in (-0.72, 0.72):
             add_cylinder("tesla_post", (x, 0.28, 1.22), 0.045, 0.58, trim)
             add_uv_sphere("tesla_cap", (x, 0.28, 1.54), 0.09, accent)
     elif kind == "biochamber":
         add_torus("bio_tank_rim", (0, -0.05, 1.22), 0.44, 0.035, trim)
         add_uv_sphere("bio_core", (0, -0.05, 1.22), 0.42, primary)
+        add_torus("bio_glass_equator", (0, -0.05, 1.22), 0.48, 0.018, accent, rotation=(math.pi / 2, 0, angle))
+        for x in (-0.54, 0.54):
+            add_cylinder("nutrient_tank", (x, 0.24, 1.06), 0.14, 0.42, trim)
+            add_cylinder("nutrient_line", (x * 0.58, 0.0, 1.08), 0.025, 0.62, accent, vertices=12, rotation=(math.pi / 2, 0, x))
         add_uv_sphere("bio_pulse", (0.2 * math.cos(angle), -0.05 + 0.2 * math.sin(angle), 1.34), 0.12 + 0.04 * frame, accent)
         add_uv_sphere("bio_bubble", (-0.26, -0.12, 1.18 + 0.06 * math.sin(angle)), 0.08 + 0.02 * (3 - frame), accent)
     elif kind == "cryogenic":
         add_cylinder("cryo_tank_l", (-0.42, -0.05, 1.16), 0.22, 0.72, primary)
         add_cylinder("cryo_tank_r", (0.42, -0.05, 1.16), 0.22, 0.72, primary)
+        add_cylinder("cryo_tank_center", (0, 0.15, 1.06), 0.18, 0.62, trim)
         add_uv_sphere("frost_core", (0, -0.08, 1.26), 0.26, accent)
         add_uv_sphere("cold_vapor", (0.2 * math.cos(angle), -0.25 + 0.12 * math.sin(angle), 1.55), 0.11, accent)
         add_cylinder("cryo_pipe", (0, 0.28, 1.1), 0.05, 1.1, trim, vertices=16, rotation=(math.pi / 2, 0, math.pi / 2))
         add_torus("frost_ring", (0, -0.08, 1.28), 0.32, 0.025, accent, rotation=(math.pi / 2, 0, angle))
+        add_crystal_cluster(accent, trim, origin=(0, -0.38, 1.34), scale=0.7)
 
     empty = bpy.data.objects.new("rotator", None)
     bpy.context.collection.objects.link(empty)
