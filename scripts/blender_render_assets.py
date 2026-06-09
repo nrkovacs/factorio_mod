@@ -83,6 +83,10 @@ def material(name: str, color, emission: float = 0.0):
     bsdf.inputs["Emission Color"].default_value = color
     bsdf.inputs["Emission Strength"].default_value = emission
     mat.diffuse_color = color
+    if color[3] < 1:
+        mat.blend_method = "BLEND"
+        mat.use_screen_refraction = True
+        mat.show_transparent_back = False
     return mat
 
 
@@ -218,6 +222,93 @@ def add_crystal_cluster(accent, trim, origin=(0, 0, 1.45), scale=1.0):
     add_panel("crystal_mount", (origin[0], origin[1], origin[2] - 0.14 * scale), (0.48 * scale, 0.28 * scale, 0.07 * scale), trim)
 
 
+def add_satellite_dish(name, location, trim, accent, rotation_z=0.0):
+    dish = add_torus(name, location, 0.21, 0.014, trim, rotation=(1.05, 0, rotation_z))
+    dish.scale.z = 0.35
+    add_cylinder(f"{name}_mast", (location[0], location[1], location[2] - 0.24), 0.028, 0.42, trim)
+    add_uv_sphere(f"{name}_feed", (location[0] + math.cos(rotation_z) * 0.15, location[1] + math.sin(rotation_z) * 0.15, location[2] + 0.02), 0.04, accent)
+
+
+def add_solar_wing(name, side: float, y: float, metal, primary, trim):
+    add_cylinder(f"{name}_boom", (side * 1.22, y, 0.86), 0.025, 0.78, trim, vertices=12, rotation=(math.pi / 2, 0, 0))
+    for row, z in enumerate((0.72, 0.94)):
+        for column, offset in enumerate((-0.18, 0.0, 0.18)):
+            panel = add_panel(
+                f"{name}_panel",
+                (side * 1.5, y + offset, z),
+                (0.26, 0.13, 0.035),
+                primary if (row + column) % 2 else metal,
+            )
+            panel.rotation_euler[2] = side * 0.12
+    add_panel(f"{name}_spine", (side * 1.34, y, 0.83), (0.04, 0.5, 0.05), trim)
+
+
+def add_hex_dome_pattern(accent, trim, pulse: float):
+    for ring, radius in enumerate((0.0, 0.2, 0.4)):
+        count = 1 if ring == 0 else 6 * ring
+        for index in range(count):
+            angle = 0 if count == 1 else index * math.tau / count
+            x = math.cos(angle) * radius
+            y = -0.05 + math.sin(angle) * radius * 0.72
+            z = 1.42 + max(0, 0.24 - radius * 0.18)
+            add_cylinder(
+                "dome_hex",
+                (x, y, z),
+                0.055 if ring else 0.07,
+                0.012,
+                accent if pulse > 0.35 else trim,
+                vertices=6,
+                rotation=(0, 0, angle + math.pi / 6),
+            )
+
+
+def add_reference_lab(primary, accent, dark, metal, trim, rust, frame: int, angle: float):
+    pulse = [0.08, 0.55, 0.92, 0.35][frame]
+    dome_glass = material("dome_glass", (0.18 + pulse * 0.2, 0.46 - pulse * 0.08, 0.74 + pulse * 0.18, 0.5), 0.15 + pulse * 0.55)
+    purple = material("research_purple", (0.68, 0.24, 1.0, 1), 0.65 + pulse * 1.45)
+    cyan = material("platform_cyan", (0.0, 0.95, 0.95, 1), 1.4)
+    steam = material("steam", (0.85, 0.9, 0.92, 0.42), 0.05)
+
+    add_cube("platform_deck", (0, -0.03, 0.16), (2.55, 2.05, 0.24), dark)
+    add_panel("front_platform_lip", (0, -1.12, 0.3), (2.35, 0.08, 0.13), trim)
+    add_panel("rear_platform_lip", (0, 0.98, 0.3), (2.1, 0.08, 0.12), trim)
+    for x in (-0.85, 0, 0.85):
+        add_panel("deck_trace", (x, -0.98, 0.36), (0.06, 0.18, 0.035), cyan)
+    for x in (-1.05, 1.05):
+        add_panel("side_teal_conduit", (x, -0.34, 0.42), (0.055, 0.88, 0.045), cyan)
+        add_panel("corner_teal_conduit", (x * 0.72, -0.96, 0.42), (0.5, 0.045, 0.04), cyan)
+
+    add_cube("lab_octagonal_body", (0, -0.05, 0.72), (1.48, 1.22, 0.55), metal)
+    add_panel("front_window_band", (0, -0.7, 0.8), (1.05, 0.05, 0.18), accent)
+    for x in (-0.58, -0.28, 0.28, 0.58):
+        add_panel("window_pane", (x, -0.735, 0.82), (0.14, 0.025, 0.12), cyan)
+    for side in (-1, 1):
+        add_panel("buttress", (side * 0.86, -0.26, 0.7), (0.18, 0.72, 0.48), trim)
+        add_cylinder("corner_vessel", (side * 0.96, -0.68, 0.63), 0.09, 0.42, rust)
+        add_solar_wing("solar_wing", side, 0.46, metal, primary, trim)
+
+    add_cylinder("dome_socket", (0, -0.05, 1.08), 0.58, 0.16, trim)
+    dome = add_uv_sphere("research_dome", (0, -0.05, 1.28), 0.56, dome_glass)
+    dome.scale.z = 0.42
+    add_torus("dome_rim", (0, -0.05, 1.13), 0.58, 0.03, trim)
+    add_hex_dome_pattern(purple if pulse > 0.4 else accent, trim, pulse)
+    add_uv_sphere("research_core", (0.05 * math.cos(angle), -0.05 + 0.05 * math.sin(angle), 1.28), 0.19 + pulse * 0.09, purple)
+    add_torus("research_scan_ring", (0, -0.05, 1.31), 0.42, 0.018, purple, rotation=(0.35, 0.15, angle))
+
+    add_satellite_dish("dish_left", (-0.52, 0.66, 1.42), trim, accent, rotation_z=2.45)
+    add_satellite_dish("dish_right", (0.48, 0.68, 1.5), trim, accent, rotation_z=0.85)
+    add_sensor_cluster(accent, trim)
+    for x in (-0.74, 0.74):
+        add_cylinder("rear_antenna", (x, 0.62, 1.15), 0.02, 0.52, trim)
+        add_uv_sphere("rear_beacon", (x, 0.62, 1.45), 0.045 + pulse * 0.02, cyan)
+
+    if frame in {2, 3}:
+        for index, x in enumerate((-0.86, 0.86, -0.35, 0.35)):
+            y = -0.82 if index < 2 else 0.78
+            add_uv_sphere("steam_puff", (x, y, 0.66 + 0.12 * index), 0.13 + 0.04 * frame, steam)
+            add_uv_sphere("steam_puff_high", (x + 0.04 * math.sin(angle), y, 0.88 + 0.08 * index), 0.09 + 0.03 * frame, steam)
+
+
 def setup_scene():
     style = STYLES[VARIANT]
     bpy.ops.object.select_all(action="SELECT")
@@ -261,37 +352,33 @@ def build_asset(name: str, frame: int):
     trim = material("trim_metal", style["trim"], 0)
     rust = material("warm_wear", style["rust"], 0)
 
-    add_cylinder("base", (0, 0, 0.15), 1.05, 0.3, dark)
-    add_cube("body", (0, 0, 0.65), (1.8, 1.45, 0.8), metal)
-    add_cube("front_panel", (0, -0.78, 0.72), (1.2, 0.12, 0.5), primary)
-    add_machine_greebles(primary, accent, dark, trim, rust)
-
     kind = spec["kind"]
     angle = frame * math.tau / 4
 
+    if kind != "lab":
+        add_cylinder("base", (0, 0, 0.15), 1.05, 0.3, dark)
+        add_cube("body", (0, 0, 0.65), (1.8, 1.45, 0.8), metal)
+        add_cube("front_panel", (0, -0.78, 0.72), (1.2, 0.12, 0.5), primary)
+        add_machine_greebles(primary, accent, dark, trim, rust)
+
     if kind in {"lab", "replicator"}:
-        add_torus("energy_ring", (0, -0.15, 1.26), 0.48, 0.035, primary, rotation=(0.35, 0.15, angle))
-        add_uv_sphere("core", (0, -0.15, 1.25), 0.42, accent)
-        add_cylinder("core_socket", (0, -0.15, 1.08), 0.5, 0.12, trim)
-        add_radiator_bank(-1, primary, trim, accent)
-        add_radiator_bank(1, primary, trim, accent)
-        for i in range(6):
-            a = angle + i * math.tau / 6
-            add_cylinder("core_arm", (math.cos(a) * 0.55, math.sin(a) * 0.55, 1.18), 0.04, 0.58, primary, vertices=16, rotation=(math.pi / 2, 0, a))
-        if kind == "replicator":
+        if kind == "lab":
+            add_reference_lab(primary, accent, dark, metal, trim, rust, frame, angle)
+        else:
+            add_torus("energy_ring", (0, -0.15, 1.26), 0.48, 0.035, primary, rotation=(0.35, 0.15, angle))
+            add_uv_sphere("core", (0, -0.15, 1.25), 0.42, accent)
+            add_cylinder("core_socket", (0, -0.15, 1.08), 0.5, 0.12, trim)
+            add_radiator_bank(-1, primary, trim, accent)
+            add_radiator_bank(1, primary, trim, accent)
+            for i in range(6):
+                a = angle + i * math.tau / 6
+                add_cylinder("core_arm", (math.cos(a) * 0.55, math.sin(a) * 0.55, 1.18), 0.04, 0.58, primary, vertices=16, rotation=(math.pi / 2, 0, a))
             add_torus("matter_ring", (0, -0.15, 1.42), 0.32, 0.025, accent, rotation=(math.pi / 2, 0, -angle))
             add_torus("outer_matter_gate", (0, -0.15, 1.42), 0.56, 0.02, primary, rotation=(math.pi / 2, 0, angle * 0.5))
             add_crystal_cluster(accent, trim, origin=(0, -0.2, 1.72), scale=0.75)
             for i in range(3):
                 a = angle * 0.5 + i * math.tau / 3
                 add_uv_sphere("replication_particle", (math.cos(a) * 0.36, math.sin(a) * 0.36 - 0.15, 1.58), 0.055, accent)
-        else:
-            add_panel("lab_screen", (0, -0.92, 1.2), (0.64, 0.05, 0.18), accent)
-            add_sensor_cluster(accent, trim)
-            add_torus("observatory_dish", (0, 0.52, 1.52), 0.28, 0.018, trim, rotation=(1.15, 0, 0))
-            for x in (-0.34, 0.34):
-                add_cylinder("lab_antenna", (x, 0.42, 1.4), 0.025, 0.56, trim)
-                add_uv_sphere("lab_beacon", (x, 0.42, 1.72), 0.075, accent)
     elif kind == "collector":
         add_cylinder("collector_mast", (0, -0.05, 1.24), 0.075, 0.78, trim)
         add_torus("collector_field", (0, -0.05, 1.42), 0.5, 0.018, accent, rotation=(0.2, 0.7, angle))

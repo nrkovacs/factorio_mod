@@ -66,6 +66,12 @@ def assert_gif(path: Path) -> None:
         require(image.size == (128, 128), f"{path} has size {image.size}, expected (128, 128)")
 
 
+def assert_ogg(path: Path) -> None:
+    require(path.exists(), f"missing {path}")
+    require(path.stat().st_size > 10_000, f"{path} is unexpectedly small")
+    require(path.read_bytes()[:4] == b"OggS", f"{path} is not an OGG file")
+
+
 def main() -> None:
     for name in ICON_NAMES:
         assert_png(ROOT / "graphics" / "icons" / f"{name}.png", (64, 64), True)
@@ -80,6 +86,7 @@ def main() -> None:
         assert_gif(ROOT / "graphics" / "previews" / f"{name}.gif")
 
     assert_png(ROOT / "graphics" / "art-preview-sheet.png", (384, 288), True)
+    assert_ogg(ROOT / "sound" / "interstellar-lab-working.ogg")
     print("Art asset validation passed")
 
 
