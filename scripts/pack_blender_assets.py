@@ -64,13 +64,22 @@ def fit_square(image: Image.Image, size: int, padding: int = 6) -> Image.Image:
     return out
 
 
+def polish(image: Image.Image, contrast: float = 1.12, sharpness: float = 1.25) -> Image.Image:
+    alpha = image.getchannel("A")
+    rgb = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    color = ImageEnhance.Contrast(image.convert("RGB")).enhance(contrast)
+    color = ImageEnhance.Sharpness(color).enhance(sharpness)
+    rgb.paste(color.convert("RGBA"), mask=alpha)
+    return rgb
+
+
 def load_frames(name: str, size: int = 128) -> list[Image.Image]:
     frames = []
     for index in range(1, 5):
         path = RENDERS / name / f"frame_{index:02d}.png"
         if not path.exists():
             raise FileNotFoundError(path)
-        frame = fit_square(Image.open(path), size, padding=4)
+        frame = polish(fit_square(Image.open(path), size, padding=4))
         frames.append(frame)
     return frames
 
@@ -120,7 +129,7 @@ def save_sheet(name: str, frames: list[Image.Image]) -> None:
 def save_icon(name: str, source: str) -> None:
     frame = load_frames(source, 96)[0]
     icon = fit_square(frame, 64, padding=4)
-    icon = ImageEnhance.Sharpness(icon).enhance(1.15)
+    icon = ImageEnhance.Sharpness(icon).enhance(1.3)
     ICONS.mkdir(parents=True, exist_ok=True)
     icon.save(ICONS / f"{name}.png")
 
@@ -134,6 +143,7 @@ def save_tech(name: str, source: str) -> None:
         out.alpha_composite(Image.new("RGBA", (4, 4), (115, 205, 255, 130)), (x, y))
     out.alpha_composite(glow_from_frame(fit_square(frame, 128, padding=4)))
     out.alpha_composite(fit_square(frame, 112, padding=0), (8, 8))
+    out = polish(out, contrast=1.08, sharpness=1.12)
     TECH.mkdir(parents=True, exist_ok=True)
     out.save(TECH / f"{name}.png")
 
