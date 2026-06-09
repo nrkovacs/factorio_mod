@@ -71,6 +71,17 @@ Latest interstellar lab reference-match pass on 2026-06-09:
 - `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1`: passed and rebuilt `dist\interstellar-fleets_0.1.0.zip` with the `sound` folder included.
 - `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-lab-reference-test.zip`: passed with exit code 0 using the rebuilt package from `dist`.
 
+Latest high-fidelity interstellar lab art pass on 2026-06-09:
+
+- Replaced the approximate Blender-only lab sprite with reference-derived transparent source frames under `graphics/source/interstellar-lab-reference/`.
+- Updated the packer to prefer those source frames for `interstellar-lab`, while keeping the Blender model available as an editable fallback.
+- Increased the in-game lab sprite sheet to 256 px frames for better detail retention, producing a 1024x256 animation sheet and glow sheet.
+- Updated the lab prototype animation dimensions and scale so the higher-resolution sheet displays at the intended in-game size.
+- `C:\Users\nrkov\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe scripts\pack_blender_assets.py`: passed after regenerating lab sprites, icon, technology image, preview GIF, and art preview sheet from the reference-derived frames.
+- `C:\Users\nrkov\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe scripts\validate_art_assets.py`: passed with the new 1024x256 lab sheet expectation.
+- `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1`: passed and rebuilt `dist\interstellar-fleets_0.1.0.zip`.
+- `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-lab-reference-v2-test.zip`: passed with exit code 0 using the rebuilt package from `dist`.
+
 ## Soft-Lock Review
 
 The intended recovery loop is:

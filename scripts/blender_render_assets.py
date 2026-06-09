@@ -223,43 +223,64 @@ def add_crystal_cluster(accent, trim, origin=(0, 0, 1.45), scale=1.0):
 
 
 def add_satellite_dish(name, location, trim, accent, rotation_z=0.0):
-    dish = add_torus(name, location, 0.21, 0.014, trim, rotation=(1.05, 0, rotation_z))
-    dish.scale.z = 0.35
-    add_cylinder(f"{name}_mast", (location[0], location[1], location[2] - 0.24), 0.028, 0.42, trim)
-    add_uv_sphere(f"{name}_feed", (location[0] + math.cos(rotation_z) * 0.15, location[1] + math.sin(rotation_z) * 0.15, location[2] + 0.02), 0.04, accent)
+    add_torus(name, location, 0.23, 0.014, trim, rotation=(1.08, 0, rotation_z))
+    bowl = add_uv_sphere(f"{name}_bowl", location, 0.22, trim)
+    bowl.scale = (1.0, 1.0, 0.16)
+    bowl.rotation_euler = (1.08, 0, rotation_z)
+    add_torus(f"{name}_inner_ring", location, 0.12, 0.008, accent, rotation=(1.08, 0, rotation_z))
+    add_cylinder(f"{name}_mast", (location[0], location[1], location[2] - 0.26), 0.03, 0.46, trim)
+    for offset in (-0.08, 0.08):
+        add_cylinder(
+            f"{name}_brace",
+            (location[0] + math.cos(rotation_z + offset) * 0.06, location[1] + math.sin(rotation_z + offset) * 0.06, location[2] - 0.12),
+            0.011,
+            0.32,
+            trim,
+            vertices=8,
+            rotation=(1.0, 0, rotation_z + offset),
+        )
+    add_uv_sphere(f"{name}_feed", (location[0] + math.cos(rotation_z) * 0.16, location[1] + math.sin(rotation_z) * 0.16, location[2] + 0.03), 0.045, accent)
 
 
-def add_solar_wing(name, side: float, y: float, metal, primary, trim):
-    add_cylinder(f"{name}_boom", (side * 1.22, y, 0.86), 0.025, 0.78, trim, vertices=12, rotation=(math.pi / 2, 0, 0))
-    for row, z in enumerate((0.72, 0.94)):
-        for column, offset in enumerate((-0.18, 0.0, 0.18)):
+def add_solar_wing(name, side: float, y: float, solar, solar_grid, trim):
+    add_cylinder(f"{name}_boom", (side * 1.08, y, 0.88), 0.025, 0.78, trim, vertices=12, rotation=(math.pi / 2, 0, 0))
+    for row, z in enumerate((0.72, 0.93)):
+        for column, offset in enumerate((-0.16, 0.0, 0.16)):
             panel = add_panel(
                 f"{name}_panel",
-                (side * 1.5, y + offset, z),
-                (0.26, 0.13, 0.035),
-                primary if (row + column) % 2 else metal,
+                (side * 1.34, y + offset, z),
+                (0.23, 0.115, 0.032),
+                solar,
             )
             panel.rotation_euler[2] = side * 0.12
-    add_panel(f"{name}_spine", (side * 1.34, y, 0.83), (0.04, 0.5, 0.05), trim)
+            add_panel(f"{name}_grid_h", (side * 1.34, y + offset, z + 0.025), (0.21, 0.012, 0.01), solar_grid)
+            add_panel(f"{name}_grid_v", (side * 1.34, y + offset, z + 0.027), (0.012, 0.095, 0.01), solar_grid)
+    add_panel(f"{name}_spine", (side * 1.2, y, 0.83), (0.04, 0.44, 0.05), trim)
 
 
 def add_hex_dome_pattern(accent, trim, pulse: float):
-    for ring, radius in enumerate((0.0, 0.2, 0.4)):
-        count = 1 if ring == 0 else 6 * ring
-        for index in range(count):
-            angle = 0 if count == 1 else index * math.tau / count
-            x = math.cos(angle) * radius
-            y = -0.05 + math.sin(angle) * radius * 0.72
-            z = 1.42 + max(0, 0.24 - radius * 0.18)
-            add_cylinder(
-                "dome_hex",
-                (x, y, z),
-                0.055 if ring else 0.07,
-                0.012,
-                accent if pulse > 0.35 else trim,
-                vertices=6,
-                rotation=(0, 0, angle + math.pi / 6),
-            )
+    for radius in (0.18, 0.34, 0.48):
+        add_torus("dome_latitude", (0, -0.05, 1.36 + (0.5 - radius) * 0.22), radius, 0.007, accent if pulse > 0.35 else trim, rotation=(0.25, 0, 0))
+    for index in range(8):
+        angle = index * math.tau / 8
+        add_cylinder(
+            "dome_meridian",
+            (math.cos(angle) * 0.25, -0.05 + math.sin(angle) * 0.18, 1.43),
+            0.006,
+            0.7,
+            accent if index % 2 == 0 and pulse > 0.35 else trim,
+            vertices=8,
+            rotation=(0.75, 0.15, angle),
+        )
+    for index in range(12):
+        angle = index * math.tau / 12
+        radius = 0.38 if index % 2 else 0.24
+        add_uv_sphere(
+            "dome_node",
+            (math.cos(angle) * radius, -0.05 + math.sin(angle) * radius * 0.7, 1.47 - radius * 0.12),
+            0.026,
+            accent if pulse > 0.35 else trim,
+        )
 
 
 def add_reference_lab(primary, accent, dark, metal, trim, rust, frame: int, angle: float):
@@ -268,26 +289,47 @@ def add_reference_lab(primary, accent, dark, metal, trim, rust, frame: int, angl
     purple = material("research_purple", (0.68, 0.24, 1.0, 1), 0.65 + pulse * 1.45)
     cyan = material("platform_cyan", (0.0, 0.95, 0.95, 1), 1.4)
     steam = material("steam", (0.85, 0.9, 0.92, 0.42), 0.05)
+    wall = material("lab_wall", (0.46, 0.5, 0.51, 1), 0.02)
+    wall_light = material("lab_light_panels", (0.64, 0.66, 0.64, 1), 0.02)
+    solar = material("solar_blue", (0.05, 0.18, 0.36, 1), 0.08)
+    solar_grid = material("solar_grid", (0.36, 0.68, 0.92, 1), 0.35)
 
-    add_cube("platform_deck", (0, -0.03, 0.16), (2.55, 2.05, 0.24), dark)
+    add_cube("platform_deck", (0, -0.03, 0.16), (2.35, 1.92, 0.24), metal)
+    add_panel("dark_inset_deck", (0, -0.05, 0.31), (2.0, 1.45, 0.035), dark)
     add_panel("front_platform_lip", (0, -1.12, 0.3), (2.35, 0.08, 0.13), trim)
     add_panel("rear_platform_lip", (0, 0.98, 0.3), (2.1, 0.08, 0.12), trim)
+    for side in (-1, 1):
+        add_panel("angled_deck_corner", (side * 1.0, -0.9, 0.34), (0.32, 0.075, 0.11), trim)
+        add_panel("rear_truss", (side * 0.78, 0.92, 0.42), (0.5, 0.055, 0.11), metal)
     for x in (-0.85, 0, 0.85):
         add_panel("deck_trace", (x, -0.98, 0.36), (0.06, 0.18, 0.035), cyan)
     for x in (-1.05, 1.05):
         add_panel("side_teal_conduit", (x, -0.34, 0.42), (0.055, 0.88, 0.045), cyan)
         add_panel("corner_teal_conduit", (x * 0.72, -0.96, 0.42), (0.5, 0.045, 0.04), cyan)
+    for x in (-0.92, -0.55, 0.55, 0.92):
+        add_cylinder("deck_bolt_stack", (x, -0.98, 0.47), 0.035, 0.09, trim, vertices=12)
+    for x in (-0.46, 0.46):
+        add_panel("front_equipment_bay", (x, -0.86, 0.52), (0.26, 0.12, 0.2), metal)
+        add_uv_sphere("bay_status_light", (x, -0.94, 0.65), 0.032, cyan)
 
-    add_cube("lab_octagonal_body", (0, -0.05, 0.72), (1.48, 1.22, 0.55), metal)
-    add_panel("front_window_band", (0, -0.7, 0.8), (1.05, 0.05, 0.18), accent)
+    add_cube("lab_octagonal_body", (0, -0.05, 0.72), (1.42, 1.14, 0.53), wall)
+    add_panel("front_facade", (0, -0.66, 0.71), (1.08, 0.065, 0.34), wall_light)
+    add_panel("front_window_band", (0, -0.705, 0.84), (0.95, 0.04, 0.16), accent)
     for x in (-0.58, -0.28, 0.28, 0.58):
-        add_panel("window_pane", (x, -0.735, 0.82), (0.14, 0.025, 0.12), cyan)
+        add_panel("window_pane", (x, -0.735, 0.86), (0.13, 0.025, 0.1), cyan)
+    for x in (-0.5, 0.5):
+        add_panel("green_console", (x, -0.735, 0.62), (0.18, 0.025, 0.065), accent)
+        add_panel("dark_console_slot", (x * 0.82, -0.74, 0.54), (0.16, 0.025, 0.045), dark)
     for side in (-1, 1):
-        add_panel("buttress", (side * 0.86, -0.26, 0.7), (0.18, 0.72, 0.48), trim)
-        add_cylinder("corner_vessel", (side * 0.96, -0.68, 0.63), 0.09, 0.42, rust)
-        add_solar_wing("solar_wing", side, 0.46, metal, primary, trim)
+        add_panel("buttress", (side * 0.83, -0.26, 0.7), (0.16, 0.68, 0.46), trim)
+        add_cylinder("corner_vessel", (side * 0.92, -0.68, 0.63), 0.09, 0.42, rust)
+        add_cylinder("corner_vessel_cap", (side * 0.92, -0.68, 0.89), 0.065, 0.08, trim)
+        for y in (-0.42, -0.2, 0.02):
+            add_panel("side_service_panel", (side * 0.9, y, 0.86), (0.055, 0.13, 0.11), wall_light)
+        add_solar_wing("solar_wing", side, 0.46, solar, solar_grid, trim)
 
     add_cylinder("dome_socket", (0, -0.05, 1.08), 0.58, 0.16, trim)
+    add_torus("dome_lower_gasket", (0, -0.05, 1.12), 0.5, 0.018, dark)
     dome = add_uv_sphere("research_dome", (0, -0.05, 1.28), 0.56, dome_glass)
     dome.scale.z = 0.42
     add_torus("dome_rim", (0, -0.05, 1.13), 0.58, 0.03, trim)
@@ -297,6 +339,8 @@ def add_reference_lab(primary, accent, dark, metal, trim, rust, frame: int, angl
 
     add_satellite_dish("dish_left", (-0.52, 0.66, 1.42), trim, accent, rotation_z=2.45)
     add_satellite_dish("dish_right", (0.48, 0.68, 1.5), trim, accent, rotation_z=0.85)
+    add_cylinder("rear_crane_base", (0.02, 0.73, 1.15), 0.035, 0.42, trim)
+    add_cylinder("rear_crane_arm", (0.16, 0.72, 1.38), 0.018, 0.42, trim, vertices=8, rotation=(1.25, 0, 1.2))
     add_sensor_cluster(accent, trim)
     for x in (-0.74, 0.74):
         add_cylinder("rear_antenna", (x, 0.62, 1.15), 0.02, 0.52, trim)
@@ -316,8 +360,8 @@ def setup_scene():
     scene = bpy.context.scene
     scene.render.engine = "BLENDER_EEVEE_NEXT"
     scene.eevee.taa_render_samples = 32
-    scene.render.resolution_x = 256
-    scene.render.resolution_y = 256
+    scene.render.resolution_x = 384
+    scene.render.resolution_y = 384
     scene.render.film_transparent = True
     scene.render.image_settings.file_format = "PNG"
     scene.render.image_settings.color_mode = "RGBA"
@@ -335,7 +379,7 @@ def setup_scene():
     fill.name = "accent_fill"
     fill.data.energy = 80
 
-    bpy.ops.object.camera_add(location=(4.8, -6.2, 5.2), rotation=(math.radians(60), 0, math.radians(41)))
+    bpy.ops.object.camera_add(location=(4.8, -6.2, 5.9), rotation=(math.radians(63), 0, math.radians(41)))
     camera = bpy.context.object
     camera.data.type = "ORTHO"
     camera.data.ortho_scale = style["ortho"]

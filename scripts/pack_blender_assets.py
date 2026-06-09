@@ -8,6 +8,7 @@ from PIL import Image, ImageEnhance, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[1]
 RENDERS = ROOT / "tmp" / "blender-renders"
+REFERENCE_SOURCES = ROOT / "graphics" / "source"
 ICONS = ROOT / "graphics" / "icons"
 TECH = ROOT / "graphics" / "technology"
 ENTITY = ROOT / "graphics" / "entity"
@@ -24,6 +25,10 @@ ENTITY_NAMES = [
     "interstellar-biochamber",
     "interstellar-cryogenic-plant",
 ]
+
+ENTITY_FRAME_SIZES = {
+    "interstellar-lab": 256,
+}
 
 TECH_ALIASES = {
     "interstellar-fleets": "interstellar-lab",
@@ -73,10 +78,16 @@ def polish(image: Image.Image, contrast: float = 1.12, sharpness: float = 1.25) 
     return rgb
 
 
-def load_frames(name: str, size: int = 128) -> list[Image.Image]:
+def frame_size_for(name: str) -> int:
+    return ENTITY_FRAME_SIZES.get(name, 128)
+
+
+def load_frames(name: str, size: int | None = None) -> list[Image.Image]:
+    size = size or frame_size_for(name)
     frames = []
     for index in range(1, 5):
-        path = RENDERS / name / f"frame_{index:02d}.png"
+        reference_path = REFERENCE_SOURCES / f"{name}-reference" / f"frame_{index:02d}.png"
+        path = reference_path if reference_path.exists() else RENDERS / name / f"frame_{index:02d}.png"
         if not path.exists():
             raise FileNotFoundError(path)
         frame = polish(fit_square(Image.open(path), size, padding=4))
@@ -86,18 +97,18 @@ def load_frames(name: str, size: int = 128) -> list[Image.Image]:
 
 def glow_from_frame(frame: Image.Image) -> Image.Image:
     alpha = frame.getchannel("A")
-    glow_alpha = alpha.filter(ImageFilter.GaussianBlur(8))
+    glow_alpha = alpha.filter(ImageFilter.GaussianBlur(max(8, frame.width // 16)))
     glow = Image.new("RGBA", frame.size, (105, 215, 255, 0))
     glow.putalpha(glow_alpha.point(lambda value: int(value * 0.55)))
     return glow
 
 
 def preview_frame(frame: Image.Image, index: int) -> Image.Image:
-    out = frame.copy()
-    sparkle = Image.new("RGBA", frame.size, (0, 0, 0, 0))
+    out = fit_square(frame, 128, padding=2)
+    sparkle = Image.new("RGBA", out.size, (0, 0, 0, 0))
     angle = index * math.tau / 4
-    x = int(frame.width / 2 + math.cos(angle + 0.4) * 42)
-    y = int(frame.height / 2 + math.sin(angle + 0.4) * 30 - 12)
+    x = int(out.width / 2 + math.cos(angle + 0.4) * 42)
+    y = int(out.height / 2 + math.sin(angle + 0.4) * 30 - 12)
     for radius, alpha in [(4, 90), (2, 180), (1, 255)]:
         dot = Image.new("RGBA", (radius * 2 + 1, radius * 2 + 1), (125, 225, 255, alpha))
         sparkle.alpha_composite(dot, (x - radius, y - radius))
@@ -108,11 +119,12 @@ def preview_frame(frame: Image.Image, index: int) -> Image.Image:
 def save_sheet(name: str, frames: list[Image.Image]) -> None:
     directory = ENTITY / name
     directory.mkdir(parents=True, exist_ok=True)
-    sheet = Image.new("RGBA", (128 * 4, 128), (0, 0, 0, 0))
-    glow_sheet = Image.new("RGBA", (128 * 4, 128), (0, 0, 0, 0))
+    frame_size = frames[0].width
+    sheet = Image.new("RGBA", (frame_size * 4, frame_size), (0, 0, 0, 0))
+    glow_sheet = Image.new("RGBA", (frame_size * 4, frame_size), (0, 0, 0, 0))
     for index, frame in enumerate(frames):
-        sheet.alpha_composite(frame, (index * 128, 0))
-        glow_sheet.alpha_composite(glow_from_frame(frame), (index * 128, 0))
+        sheet.alpha_composite(frame, (index * frame_size, 0))
+        glow_sheet.alpha_composite(glow_from_frame(frame), (index * frame_size, 0))
     sheet.save(directory / f"{name}-animation.png")
     glow_sheet.save(directory / f"{name}-glow.png")
     preview_frames = [preview_frame(frame, index) for index, frame in enumerate(frames)]

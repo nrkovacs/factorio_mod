@@ -19,6 +19,10 @@ ENTITY_NAMES = [
     "interstellar-cryogenic-plant",
 ]
 
+ENTITY_SHEET_SIZES = {
+    "interstellar-lab": (1024, 256),
+}
+
 ICON_NAMES = [
     "interstellar-dust",
     "ship-starter-pack",
@@ -81,8 +85,9 @@ def main() -> None:
 
     for name in ENTITY_NAMES:
         entity_dir = ROOT / "graphics" / "entity" / name
-        assert_png(entity_dir / f"{name}-animation.png", (512, 128), True)
-        assert_png(entity_dir / f"{name}-glow.png", (512, 128), True)
+        sheet_size = ENTITY_SHEET_SIZES.get(name, (512, 128))
+        assert_png(entity_dir / f"{name}-animation.png", sheet_size, True)
+        assert_png(entity_dir / f"{name}-glow.png", sheet_size, True)
         assert_gif(ROOT / "graphics" / "previews" / f"{name}.gif")
 
     assert_png(ROOT / "graphics" / "art-preview-sheet.png", (384, 288), True)
