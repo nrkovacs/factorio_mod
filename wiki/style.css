@@ -172,6 +172,32 @@ h2 {
   clear: both;
 }
 
+.art-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 1rem;
+}
+
+.art-grid figure {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid #3d4c5e;
+  background: var(--panel-2);
+  text-align: center;
+}
+
+.art-grid img {
+  width: 128px;
+  height: 128px;
+  image-rendering: pixelated;
+}
+
+.art-grid figcaption {
+  margin-top: 0.6rem;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
 footer {
   margin-top: 2rem;
   color: var(--muted);

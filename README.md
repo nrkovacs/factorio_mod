@@ -54,13 +54,16 @@ Splitting a fleet clears partial crafting and research progress on the original 
 
 ## Art Direction
 
-The mod now includes generated custom artwork for its thumbnail, item icons, and technology icons:
+The mod now includes generated custom artwork for its thumbnail, item icons, technology icons, entity sprite sheets, and review animations:
 
 - `thumbnail.png` shows an industrial fleet approaching a bright galactic core.
-- `graphics/icons/` contains distinct generated icons for dust, starter packs, labs, replicators, and both drive tiers.
-- `graphics/technology/` reuses selected generated icons at technology scale.
+- `graphics/icons/` contains distinct generated icons for dust, starter packs, antimatter, labs, replicators, drives, and all interstellar platform machines.
+- `graphics/technology/` contains dedicated generated technology art for every custom technology.
+- `graphics/entity/` contains transparent 4-frame sprite sheets for the custom animated buildings.
+- `graphics/previews/` contains animated GIF previews so sprite-sheet animations can be reviewed from GitHub without launching Factorio.
+- `wiki/art-review.html` displays the GIF previews in one browser-friendly review page.
 
-Placed entities still reuse Space Age base animations because those are reliable, animated, and already aligned to Factorio's entity geometry. The prototypes apply color tinting to distinguish the new machines in-world: cyan for interstellar labs and fusion drives, violet for quantum/antimatter equipment, and gold for dust collection. I did not reuse images or animations from third-party mods because their licenses are unknown; the implementation sticks to original generated static art plus Factorio/Space Age dependency assets.
+The quantum replicator, interstellar lab, and interstellar platform production machines use custom generated sprite sheets in-game. Drives and dust collectors keep the reliable Space Age entity geometry while using custom icons and review GIFs, because their entity prototypes have specialized animation schemas. I did not reuse images or animations from third-party mods because their licenses are unknown; the implementation sticks to generated art plus Factorio/Space Age dependency assets.
 
 ## Balance Intent
 

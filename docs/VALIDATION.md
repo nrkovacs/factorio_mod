@@ -25,6 +25,9 @@ Latest local run on 2026-06-08:
 - `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-final-current.zip --benchmark-ticks 600`: passed with exit code 0, averaging 0.077 ms/update.
 - `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-review-auto-boost.zip --benchmark-ticks 300`: passed with exit code 0 using the auto-boost validation companion mod.
 - `--start-server C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-review-runtime.zip --until-tick 360`: passed with exit code 0 using the validation companion mod.
+- `C:\Users\nrkov\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe scripts\validate_art_assets.py`: passed, confirming icon, technology, sprite-sheet, and GIF dimensions.
+- `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-custom-art.zip`: passed with exit code 0 after custom sprite-sheet integration.
+- `--benchmark C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-fleets-custom-art.zip --benchmark-ticks 600`: passed with exit code 0, averaging 0.103 ms/update.
 
 ## Soft-Lock Review
 
