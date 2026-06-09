@@ -176,7 +176,7 @@ local recipes = {
   {
     type = "recipe",
     name = "interstellar-dust-crushing",
-    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
+    icon = "__interstellar-fleets__/graphics/technology/interstellar-dust-crushing.png",
     icon_size = 64,
     category = "crushing",
     subgroup = "space-crushing",
@@ -198,7 +198,7 @@ local recipes = {
   {
     type = "recipe",
     name = "advanced-interstellar-dust-crushing",
-    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
+    icon = "__interstellar-fleets__/graphics/technology/deep-dust-prospecting.png",
     icon_size = 64,
     category = "crushing",
     subgroup = "space-crushing",

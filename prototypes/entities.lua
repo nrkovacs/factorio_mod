@@ -22,6 +22,29 @@ local function tint_sprite_definitions(value, tint)
   end
 end
 
+local function custom_animation(name, draw_as_glow)
+  return {
+    filename = "__interstellar-fleets__/graphics/entity/" .. name .. "/" .. name .. (draw_as_glow and "-glow.png" or "-animation.png"),
+    width = 128,
+    height = 128,
+    frame_count = 4,
+    line_length = 4,
+    animation_speed = 0.25,
+    scale = 0.5,
+    shift = {0, 0},
+    draw_as_glow = draw_as_glow or nil,
+    blend_mode = draw_as_glow and "additive" or nil
+  }
+end
+
+local function apply_machine_art(prototype, name)
+  prototype.icon = "__interstellar-fleets__/graphics/icons/" .. name .. ".png"
+  prototype.icons = nil
+  prototype.icon_size = 64
+  prototype.graphics_set = nil
+  prototype.animation = custom_animation(name)
+end
+
 local lab = copy_prototype("lab", "biolab", "interstellar-lab")
 lab.icon = "__interstellar-fleets__/graphics/icons/interstellar-lab.png"
 lab.icon_size = 64
@@ -30,8 +53,10 @@ lab.researching_speed = 2
 lab.inputs = table.deepcopy(data.raw.lab.biolab.inputs)
 lab.surface_conditions = nil
 tint_sprite_definitions(lab, {r = 0.55, g = 0.9, b = 1.0, a = 1.0})
+lab.on_animation = custom_animation("interstellar-lab")
+lab.off_animation = custom_animation("interstellar-lab")
 
-local replicator = copy_prototype("assembling-machine", "electromagnetic-plant", "quantum-replicator")
+local replicator = copy_prototype("assembling-machine", "assembling-machine-3", "quantum-replicator")
 replicator.icon = "__interstellar-fleets__/graphics/icons/quantum-replicator.png"
 replicator.icon_size = 64
 replicator.crafting_categories = {"interstellar-replication"}
@@ -40,6 +65,7 @@ replicator.energy_usage = "15MW"
 replicator.module_slots = 4
 replicator.surface_conditions = nil
 tint_sprite_definitions(replicator, {r = 0.75, g = 0.45, b = 1.0, a = 1.0})
+apply_machine_art(replicator, "quantum-replicator")
 
 local dust_collector = copy_prototype("asteroid-collector", "asteroid-collector", "interstellar-dust-collector")
 dust_collector.icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png"
@@ -61,21 +87,41 @@ antimatter_drive.min_performance = table.deepcopy(data.raw.thruster.thruster.min
 antimatter_drive.max_performance = table.deepcopy(data.raw.thruster.thruster.max_performance)
 tint_sprite_definitions(antimatter_drive, {r = 0.78, g = 0.4, b = 1.0, a = 1.0})
 
-local space_foundry = copy_prototype("assembling-machine", "foundry", "interstellar-foundry")
+local space_foundry = copy_prototype("assembling-machine", "assembling-machine-3", "interstellar-foundry")
+space_foundry.crafting_categories = table.deepcopy(data.raw["assembling-machine"].foundry.crafting_categories)
+space_foundry.crafting_speed = data.raw["assembling-machine"].foundry.crafting_speed
+space_foundry.energy_usage = data.raw["assembling-machine"].foundry.energy_usage
+space_foundry.module_slots = data.raw["assembling-machine"].foundry.module_slots
 space_foundry.surface_conditions = nil
 tint_sprite_definitions(space_foundry, {r = 0.55, g = 0.9, b = 1.0, a = 1.0})
+apply_machine_art(space_foundry, "interstellar-foundry")
 
-local space_electromagnetic_plant = copy_prototype("assembling-machine", "electromagnetic-plant", "interstellar-electromagnetic-plant")
+local space_electromagnetic_plant = copy_prototype("assembling-machine", "assembling-machine-3", "interstellar-electromagnetic-plant")
+space_electromagnetic_plant.crafting_categories = table.deepcopy(data.raw["assembling-machine"]["electromagnetic-plant"].crafting_categories)
+space_electromagnetic_plant.crafting_speed = data.raw["assembling-machine"]["electromagnetic-plant"].crafting_speed
+space_electromagnetic_plant.energy_usage = data.raw["assembling-machine"]["electromagnetic-plant"].energy_usage
+space_electromagnetic_plant.module_slots = data.raw["assembling-machine"]["electromagnetic-plant"].module_slots
 space_electromagnetic_plant.surface_conditions = nil
 tint_sprite_definitions(space_electromagnetic_plant, {r = 0.75, g = 0.45, b = 1.0, a = 1.0})
+apply_machine_art(space_electromagnetic_plant, "interstellar-electromagnetic-plant")
 
-local space_biochamber = copy_prototype("assembling-machine", "biochamber", "interstellar-biochamber")
+local space_biochamber = copy_prototype("assembling-machine", "assembling-machine-3", "interstellar-biochamber")
+space_biochamber.crafting_categories = table.deepcopy(data.raw["assembling-machine"].biochamber.crafting_categories)
+space_biochamber.crafting_speed = data.raw["assembling-machine"].biochamber.crafting_speed
+space_biochamber.energy_usage = data.raw["assembling-machine"].biochamber.energy_usage
+space_biochamber.module_slots = data.raw["assembling-machine"].biochamber.module_slots
 space_biochamber.surface_conditions = nil
 tint_sprite_definitions(space_biochamber, {r = 0.45, g = 1.0, b = 0.65, a = 1.0})
+apply_machine_art(space_biochamber, "interstellar-biochamber")
 
-local space_cryogenic_plant = copy_prototype("assembling-machine", "cryogenic-plant", "interstellar-cryogenic-plant")
+local space_cryogenic_plant = copy_prototype("assembling-machine", "assembling-machine-3", "interstellar-cryogenic-plant")
+space_cryogenic_plant.crafting_categories = table.deepcopy(data.raw["assembling-machine"]["cryogenic-plant"].crafting_categories)
+space_cryogenic_plant.crafting_speed = data.raw["assembling-machine"]["cryogenic-plant"].crafting_speed
+space_cryogenic_plant.energy_usage = data.raw["assembling-machine"]["cryogenic-plant"].energy_usage
+space_cryogenic_plant.module_slots = data.raw["assembling-machine"]["cryogenic-plant"].module_slots
 space_cryogenic_plant.surface_conditions = nil
 tint_sprite_definitions(space_cryogenic_plant, {r = 0.55, g = 0.9, b = 1.0, a = 1.0})
+apply_machine_art(space_cryogenic_plant, "interstellar-cryogenic-plant")
 
 data:extend({
   lab,

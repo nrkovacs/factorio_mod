@@ -90,7 +90,7 @@ data:extend({
   {
     type = "technology",
     name = "antimatter-containment",
-    icon = "__interstellar-fleets__/graphics/icons/antimatter.png",
+    icon = "__interstellar-fleets__/graphics/technology/antimatter-containment.png",
     icon_size = 64,
     prerequisites = {"quantum-replication"},
     unit = {
@@ -105,7 +105,7 @@ data:extend({
   {
     type = "technology",
     name = "interstellar-xenobiology",
-    icon = "__interstellar-fleets__/graphics/technology/quantum-replication.png",
+    icon = "__interstellar-fleets__/graphics/technology/interstellar-xenobiology.png",
     icon_size = 64,
     prerequisites = {"quantum-replication"},
     unit = {
@@ -124,7 +124,7 @@ data:extend({
   {
     type = "technology",
     name = "quantum-fabrication",
-    icon = "__interstellar-fleets__/graphics/technology/quantum-replication.png",
+    icon = "__interstellar-fleets__/graphics/technology/quantum-fabrication.png",
     icon_size = 64,
     prerequisites = {"quantum-replication"},
     unit = {
@@ -142,7 +142,7 @@ data:extend({
   {
     type = "technology",
     name = "orbital-industry",
-    icon = "__interstellar-fleets__/graphics/technology/interstellar-fleets.png",
+    icon = "__interstellar-fleets__/graphics/technology/orbital-industry.png",
     icon_size = 64,
     prerequisites = {"quantum-fabrication"},
     unit = {
@@ -176,7 +176,7 @@ data:extend({
   {
     type = "technology",
     name = "interstellar-dust-crushing",
-    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
+    icon = "__interstellar-fleets__/graphics/technology/interstellar-dust-crushing.png",
     icon_size = 64,
     prerequisites = {"quantum-replication"},
     unit = {
@@ -191,7 +191,7 @@ data:extend({
   {
     type = "technology",
     name = "deep-dust-prospecting",
-    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
+    icon = "__interstellar-fleets__/graphics/technology/deep-dust-prospecting.png",
     icon_size = 64,
     prerequisites = {"interstellar-dust-crushing"},
     unit = {
@@ -206,7 +206,7 @@ data:extend({
   {
     type = "technology",
     name = "stellar-fusion-drive-efficiency",
-    icon = "__interstellar-fleets__/graphics/technology/interstellar-fleets.png",
+    icon = "__interstellar-fleets__/graphics/technology/stellar-fusion-drive-efficiency.png",
     icon_size = 64,
     prerequisites = {"interstellar-fleets"},
     upgrade = true,
@@ -221,7 +221,7 @@ data:extend({
   {
     type = "technology",
     name = "interstellar-dust-collection-productivity",
-    icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
+    icon = "__interstellar-fleets__/graphics/technology/interstellar-dust-collection-productivity.png",
     icon_size = 64,
     prerequisites = {"interstellar-fleets"},
     upgrade = true,
@@ -236,7 +236,7 @@ data:extend({
   {
     type = "technology",
     name = "quantum-replication-productivity",
-    icon = "__interstellar-fleets__/graphics/technology/quantum-replication.png",
+    icon = "__interstellar-fleets__/graphics/technology/quantum-replication-productivity.png",
     icon_size = 64,
     prerequisites = {"quantum-replication"},
     upgrade = true,
@@ -251,7 +251,7 @@ data:extend({
   {
     type = "technology",
     name = "fleet-coordination",
-    icon = "__interstellar-fleets__/graphics/technology/fleet-printing.png",
+    icon = "__interstellar-fleets__/graphics/technology/fleet-coordination.png",
     icon_size = 64,
     prerequisites = {"fleet-printing"},
     upgrade = true,
@@ -266,7 +266,7 @@ data:extend({
   {
     type = "technology",
     name = "antimatter-drive-efficiency",
-    icon = "__interstellar-fleets__/graphics/technology/fleet-printing.png",
+    icon = "__interstellar-fleets__/graphics/technology/antimatter-drive-efficiency.png",
     icon_size = 64,
     prerequisites = {"fleet-printing", "stellar-fusion-drive-efficiency"},
     upgrade = true,
