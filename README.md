@@ -65,7 +65,7 @@ The mod now includes custom artwork for its thumbnail, item icons, technology ic
 - `scripts/blender_render_assets.py` builds and renders the procedural 3D models.
 - `scripts/pack_blender_assets.py` crops, scales, and packs those renders into icons, technology art, sprite sheets, glow masks, GIF previews, and the preview sheet.
 
-The quantum replicator, interstellar lab, and interstellar platform production machines use custom Blender-rendered sprite sheets in-game. Drives and dust collectors keep the reliable Space Age entity geometry while using custom icons and review GIFs, because their entity prototypes have specialized animation schemas. I did not reuse images or animations from third-party mods because their licenses are unknown; the implementation sticks to generated art plus Factorio/Space Age dependency assets.
+In-game, all custom machines reuse base-game and Space Age entity graphics: each interstellar machine is a deep copy of its vanilla counterpart (biolab, electromagnetic plant, foundry, biochamber, cryogenic plant, asteroid collector, thruster) with a per-machine color tint applied to its sprite layers and icon. This is required for correctness in Factorio 2.0 — crafting machines no longer accept a bare `animation` property, only `graphics_set` — and it keeps icons visually consistent with the placed entities. The generated Blender sprite sheets and machine icons remain in `graphics/` for reference and the art-review wiki page, but are no longer wired into the prototypes; custom icons are still used in-game for interstellar dust, antimatter, the ship starter pack, the thumbnail, and all technology art. No third-party mod assets are used, so the mod needs no extra dependencies and no license review.
 
 ## Balance Intent
 
@@ -112,4 +112,4 @@ Build the release zip with:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1
 ```
 
-The script creates `dist/interstellar-fleets_0.1.0.zip` with Factorio's required top-level `interstellar-fleets_0.1.0/` folder inside the archive.
+The script creates `dist/interstellar-fleets_<version>.zip` with Factorio's required top-level `interstellar-fleets_<version>/` folder inside the archive.

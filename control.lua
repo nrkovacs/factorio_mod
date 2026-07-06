@@ -440,7 +440,11 @@ end)
 script.on_nth_tick(60, function()
   init_storage()
 
+  local live_platform_keys = {}
   each_platform(function(platform)
+    if platform.valid then
+      live_platform_keys[tostring(platform.index)] = true
+    end
     if platform.valid and platform.surface and platform.surface.valid then
       local fleet = get_fleet(platform)
       local surface = platform.surface
@@ -473,6 +477,12 @@ script.on_nth_tick(60, function()
       end
     end
   end)
+
+  for key in pairs(storage.fleets) do
+    if not live_platform_keys[key] then
+      storage.fleets[key] = nil
+    end
+  end
 
   for _, player in pairs(game.connected_players) do
     update_caption(player)
