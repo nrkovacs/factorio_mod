@@ -82,12 +82,19 @@ Latest high-fidelity interstellar lab art pass on 2026-06-09:
 - `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1`: passed and rebuilt `dist\interstellar-fleets_0.1.0.zip`.
 - `--create C:\Users\nrkov\workspace\factorio_mod\validation\interstellar-lab-reference-v2-test.zip`: passed with exit code 0 using the rebuilt package from `dist`.
 
+Latest review pass on 2026-07-31 (macOS, no local Factorio install — offline harness):
+
+- `luac -p` on `control.lua`, `data.lua`, and every file in `prototypes/`: passed.
+- Asset audit: every `__interstellar-fleets__/...` path referenced from Lua exists with case-sensitive matching, and all icon dimensions match their declared `icon_size` (64 px item icons, 128 px technology/recipe icons).
+- Offline harness (stubbed `data.raw`, `script`, `game`, `defines`): loaded the real data-stage files and `control.lua`, then simulated 300+ runtime ticks plus merge, boost, split, and platform-deletion scenarios — 46/46 checks passed, covering: no dangling recipe references in technologies, machine items placing defined entities, cleared surface conditions, shadow/sound layers untinted, dust backlog capping at 20,000 and draining without ground spills, `global_effect` written only on change, merges unaffected by in-transit cargo pods, split fallback to Nauvis, and stale fleet-state pruning.
+- Fixed in this pass: Galactic Center starmap `distance` reduced from 1,000,000,000 to 120 (vanilla locations sit at 10-80, so the old value pushed the destination off the selectable starmap; journey length stays on the 1e9 km space connection), hub-overflow dust spilling replaced by the bounded backlog (spilling created one ground entity per item and destroyed UPS at fleet scale), platform signatures now ignore transient entities (cargo pods, ghosts, robots, corpses, spilled items), `global_effect` no longer rewritten every second on every platform of every force, and fleet splitting retries at Nauvis when the current location cannot host a new platform.
+
 ## Soft-Lock Review
 
 The intended recovery loop is:
 
 1. Interstellar dust collectors script-generate `interstellar-dust` on fleet platforms.
-2. Full hubs spill excess dust near the hub instead of deleting it.
+2. Overflow from full hubs is buffered in a bounded per-fleet backlog that drains into the hub as space frees up; collection pauses while the backlog is full, so dust is neither deleted in bulk nor spilled as UPS-destroying ground entities.
 3. Quantum replicators convert dust into raw resources, advanced construction parts, `fusion-power-cell`, `antimatter`, `biter-egg`, `pentapod-egg`, `bioflux`, Gleba crops, and `promethium-asteroid-chunk` after the relevant finite technologies.
 4. Orbital industry unlocks space-safe interstellar foundries, electromagnetic plants, biochambers, and cryogenic plants with recipes made from interstellar dust and replicated resources, so planet-specific production chains can be rebuilt on-platform without importing the original planet-only machines.
 5. Asteroid crushers can process dust through `interstellar-dust-crushing` and `advanced-interstellar-dust-crushing`, returning some dust and probabilistically producing asteroid chunks including rare promethium chunks.

@@ -87,9 +87,9 @@ The goal is not to trivialize Space Age. The goal is to give mature megabases a 
 - Fleet state is stored in Factorio `storage` by platform index.
 - The represented platform receives surface-level speed and energy-consumption effects based on fleet size, approximating the throughput and power draw of the abstract ships.
 - Dust collection, auto boost, and distance advancement run periodically in `control.lua`.
-- Dust overflow is spilled near the platform hub instead of being deleted, so a full hub does not permanently waste the fleet's recovery resource.
+- Dust overflow is buffered in a bounded per-fleet backlog that drains into the hub as space frees up; when the backlog is full, collection pauses like any output-blocked machine. Overflow is never spilled as ground items, which at fleet scale would create thousands of entities and destroy UPS.
 - Merge/split operations are exposed through a custom GUI and shortcut.
-- Platform layout matching uses a deterministic signature over non-character, non-resource entities.
+- Platform layout matching uses a deterministic signature that ignores transient entities such as cargo pods, construction ghosts, robots, and spilled items, so in-transit deliveries and in-progress hub construction do not spuriously block merges.
 - Split fleets clone the represented platform layout when Factorio can create the destination platform.
 
 ## Files

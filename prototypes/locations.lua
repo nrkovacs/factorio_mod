@@ -8,7 +8,11 @@ data:extend({
     icon_size = 64,
     starmap_icon = "__interstellar-fleets__/graphics/icons/interstellar-dust.png",
     starmap_icon_size = 64,
-    distance = 1000000000,
+    -- Starmap placement only. Vanilla locations sit at distance 10-80
+    -- (shattered-planet is 80); a huge value here pushes the icon so far
+    -- off the starmap that the destination cannot be seen or selected.
+    -- The extreme journey length lives on the space-connection below.
+    distance = 120,
     orientation = 0.72,
     magnitude = 2.5,
     draw_orbit = false,

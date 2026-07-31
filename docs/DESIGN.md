@@ -24,18 +24,18 @@ storage.fleets[platform_index] = {
 
 Every 60 ticks, the runtime loop:
 
-- Applies `LuaSurface.global_effect` on each platform surface so production machines and labs receive a speed bonus based on fleet size. Infinite fleet-coordination research increases this speed bonus without increasing the fleet-size power penalty.
-- Inserts interstellar dust into the platform hub based on collector count, speed, and fleet size.
+- Applies `LuaSurface.global_effect` on each platform surface so production machines and labs receive a speed bonus based on fleet size. Infinite fleet-coordination research increases this speed bonus without increasing the fleet-size power penalty. The effect is only written when the computed value changes, so idle and size-1 platforms are never touched and effects applied by other mods are not stomped every second.
+- Inserts interstellar dust into the platform hub based on collector count, speed, and fleet size. Overflow that does not fit in the hub is buffered in a bounded per-fleet backlog (never spilled as ground items, which would create one entity per item and destroy UPS at fleet scale); the backlog drains into the hub as space frees up and collection pauses while the backlog is full.
 - Advances abstract interstellar distance by `speed_c * c`.
 - Refreshes open fleet management GUIs.
 
 ## Merge And Split
 
-Merging computes a platform signature from player-force entities on the platform. The first merge records the signature; later merges require the same signature. A merge consumes one ship starter pack and increments fleet size.
+Merging computes a platform signature from player-force entities on the platform, ignoring transient entities such as cargo pods, construction ghosts, robots, corpses, and spilled items so in-transit deliveries and in-progress hub construction do not spuriously change the layout. The first merge records the signature; later merges require the same signature. A merge consumes one ship starter pack and increments fleet size.
 
 Updating the blueprint stores the current platform signature as the fleet design and clears partial progress. This is the lightweight implementation of propagating an upgraded ship layout across abstract copies.
 
-Splitting halves fleet size, clears partial progress on production entities, creates a new platform when possible, clones the source platform layout into it, and copies speed, distance, and blueprint signature to the split fleet.
+Splitting halves fleet size, clears partial progress on production entities, creates a new platform when possible, clones the source platform layout into it, and copies speed, distance, and blueprint signature to the split fleet. The new platform is created at the fleet's current location when Factorio allows it, falling back to Nauvis orbit for locations that cannot host a stationary platform (such as fly-condition destinations).
 
 Boosting counts stellar fusion drives and antimatter drives, consumes the matching fuel from the platform hub, then applies diminishing acceleration using the current Lorentz factor. Stellar fusion drives add one drive-power unit each and consume `fusion-power-cell`; antimatter drives add four drive-power units each and consume `antimatter`.
 

@@ -1,5 +1,34 @@
 local C = 299792458
 local GUI_ROOT = "interstellar_fleets_root"
+local DUST_BACKLOG_CAP = 20000
+
+-- Entities that come and go on their own (cargo pods in transit, ghosts while
+-- the hub auto-builds, robots, corpses, spilled items). Including them in the
+-- layout signature makes identical platforms spuriously fail merge checks.
+local TRANSIENT_TYPES = {
+  ["character"] = true,
+  ["cargo-pod"] = true,
+  ["construction-robot"] = true,
+  ["logistic-robot"] = true,
+  ["combat-robot"] = true,
+  ["entity-ghost"] = true,
+  ["tile-ghost"] = true,
+  ["item-request-proxy"] = true,
+  ["item-entity"] = true,
+  ["resource"] = true,
+  ["corpse"] = true,
+  ["character-corpse"] = true,
+  ["projectile"] = true,
+  ["beam"] = true,
+  ["stream"] = true,
+  ["explosion"] = true,
+  ["smoke-with-trigger"] = true,
+  ["sticker"] = true,
+  ["speech-bubble"] = true,
+  ["highlight-box"] = true,
+  ["rocket-silo-rocket"] = true,
+  ["rocket-silo-rocket-shadow"] = true
+}
 
 local function init_storage()
   storage.fleets = storage.fleets or {}
@@ -26,10 +55,14 @@ local function get_fleet(platform)
     speed_c = 0.01,
     distance_m = 0,
     blueprint_hash = nil,
-    auto_boost = false
+    auto_boost = false,
+    dust_backlog = 0
   }
   if storage.fleets[key].auto_boost == nil then
     storage.fleets[key].auto_boost = false
+  end
+  if storage.fleets[key].dust_backlog == nil then
+    storage.fleets[key].dust_backlog = 0
   end
   return storage.fleets[key]
 end
@@ -74,7 +107,7 @@ end
 local function platform_signature(surface, force)
   local parts = {}
   for _, entity in pairs(surface.find_entities_filtered({force = force})) do
-    if entity.valid and entity.name ~= "character" and entity.type ~= "resource" and entity.type ~= "item-entity" then
+    if entity.valid and not TRANSIENT_TYPES[entity.type] then
       parts[#parts + 1] = table.concat({
         entity.name,
         math.floor(entity.position.x),
@@ -87,26 +120,22 @@ local function platform_signature(surface, force)
   return table.concat(parts, "|")
 end
 
-local function insert_to_hub_or_ground(platform, stack)
+-- Deliver dust to the hub, buffering overflow in a bounded per-fleet backlog.
+-- A full hub used to spill overflow as one item-on-ground entity per item,
+-- which at fleet scale creates thousands of entities per second and destroys
+-- UPS. Instead the backlog drains into the hub as space frees up; once the
+-- backlog cap is reached, collection pauses like any output-blocked machine.
+local function deliver_dust(platform, fleet, amount)
   local hub = platform.hub
-  if hub and hub.valid then
-    local inserted = hub.insert(stack)
-    local remaining = stack.count - inserted
-    if remaining <= 0 then
-      return true
-    end
-
-    pcall(function()
-      hub.surface.spill_item_stack({
-        position = hub.position,
-        stack = {name = stack.name, count = remaining},
-        force = hub.force,
-        enable_looted = true
-      })
-    end)
-    return inserted > 0
+  if not hub or not hub.valid then
+    return
   end
-  return false
+  local pending = math.min(fleet.dust_backlog + amount, DUST_BACKLOG_CAP)
+  if pending <= 0 then
+    return
+  end
+  local inserted = hub.insert({name = "interstellar-dust", count = pending})
+  fleet.dust_backlog = pending - inserted
 end
 
 local function each_platform(callback)
@@ -292,14 +321,28 @@ local function split_fleet(player, platform, fleet)
 
   local location = platform.space_location or platform.last_visited_space_location
   local force = player and player.valid and player.force or platform.force
-  local ok, new_platform = pcall(function()
-    return force.create_space_platform({
-      name = platform.name .. " split",
-      planet = location and location.name or "nauvis",
-      starter_pack = "space-platform-starter-pack"
-    })
-  end)
-  if not ok or not new_platform then
+  local function try_create_platform(location_name)
+    local ok, created = pcall(function()
+      return force.create_space_platform({
+        name = platform.name .. " split",
+        planet = location_name,
+        starter_pack = "space-platform-starter-pack"
+      })
+    end)
+    if ok and created then
+      return created
+    end
+    return nil
+  end
+
+  -- Prefer the fleet's current location, but fall back to Nauvis so splitting
+  -- still works at locations that cannot host a new platform (for example
+  -- fly-condition destinations like the Galactic Center).
+  local new_platform = location and try_create_platform(location.name) or nil
+  if not new_platform then
+    new_platform = try_create_platform("nauvis")
+  end
+  if not new_platform then
     fleet.size = fleet.size + split_size
     notify(player, {"interstellar-fleets.split-failed"})
     return
@@ -450,21 +493,31 @@ script.on_nth_tick(60, function()
       local surface = platform.surface
       local speed_bonus = math.max(0, fleet.size - 1)
       local coordination_multiplier = research_multiplier(platform.force, "fleet-coordination", 0.03)
+      local speed_effect = speed_bonus * coordination_multiplier
 
-      if speed_bonus > 0 then
-        surface.global_effect = {
-          speed = speed_bonus * coordination_multiplier,
-          consumption = speed_bonus
-        }
-      else
-        surface.global_effect = nil
+      -- Only touch global_effect when the fleet bonus actually changes.
+      -- Rewriting it every second dirties every effect receiver on the
+      -- surface and stomps effects other mods may have applied.
+      if fleet.applied_speed_effect ~= speed_effect or fleet.applied_consumption_effect ~= speed_bonus then
+        if speed_bonus > 0 then
+          surface.global_effect = {
+            speed = speed_effect,
+            consumption = speed_bonus
+          }
+        elseif fleet.applied_speed_effect then
+          surface.global_effect = nil
+        end
+        fleet.applied_speed_effect = speed_effect
+        fleet.applied_consumption_effect = speed_bonus
       end
 
       local collectors = count_entities(surface, {["interstellar-dust-collector"] = true})
       if collectors > 0 then
         local dust_multiplier = research_multiplier(platform.force, "interstellar-dust-collection-productivity", 0.08)
         local dust = math.floor(math.max(1, collectors * fleet.size * fleet.speed_c * 25 * dust_multiplier))
-        insert_to_hub_or_ground(platform, {name = "interstellar-dust", count = dust})
+        deliver_dust(platform, fleet, dust)
+      elseif fleet.dust_backlog > 0 then
+        deliver_dust(platform, fleet, 0)
       end
 
       if fleet.auto_boost then
