@@ -32,10 +32,85 @@ local TRANSIENT_TYPES = {
 
 local function init_storage()
   storage.fleets = storage.fleets or {}
+  storage.shattered_reached = storage.shattered_reached or {}
 end
 
-script.on_init(init_storage)
-script.on_configuration_changed(init_storage)
+-- Every technology this mod adds. They all start disabled in the data stage
+-- and are only enabled once a force lands a platform at the shattered planet.
+local INTERSTELLAR_TECHS = {
+  "interstellar-fleets",
+  "quantum-replication",
+  "antimatter-containment",
+  "interstellar-xenobiology",
+  "quantum-fabrication",
+  "orbital-industry",
+  "fleet-printing",
+  "interstellar-dust-crushing",
+  "deep-dust-prospecting",
+  "stellar-fusion-drive-efficiency",
+  "interstellar-dust-collection-productivity",
+  "quantum-replication-productivity",
+  "fleet-coordination",
+  "antimatter-drive-efficiency"
+}
+
+local function set_interstellar_techs_enabled(force, enabled)
+  for _, name in pairs(INTERSTELLAR_TECHS) do
+    local technology = force.technologies[name]
+    if technology then
+      technology.enabled = enabled
+    end
+  end
+end
+
+local function mark_shattered_planet_reached(force, platform_name)
+  init_storage()
+  if storage.shattered_reached[force.name] then
+    return
+  end
+  storage.shattered_reached[force.name] = true
+  set_interstellar_techs_enabled(force, true)
+  game.print({"interstellar-fleets.shattered-planet-reached", platform_name})
+  for _, player in pairs(force.players) do
+    player.unlock_achievement("interstellar-shattered-planet")
+  end
+end
+
+local function check_platform_location(platform)
+  if platform.valid and platform.space_location and platform.space_location.name == "shattered-planet" then
+    mark_shattered_planet_reached(platform.force, platform.name)
+  end
+end
+
+-- Saves created before the gate existed loaded these techs enabled, and the
+-- runtime enabled flag persists in the save. Re-sync it: forces that already
+-- researched any mod tech count as having reached the shattered planet.
+local function sync_interstellar_tech_gate()
+  init_storage()
+  for _, force in pairs(game.forces) do
+    local reached = storage.shattered_reached[force.name] == true
+    if not reached then
+      for _, name in pairs(INTERSTELLAR_TECHS) do
+        local technology = force.technologies[name]
+        if technology and technology.researched then
+          reached = true
+          break
+        end
+      end
+      if reached then
+        storage.shattered_reached[force.name] = true
+      end
+    end
+    set_interstellar_techs_enabled(force, reached)
+  end
+end
+
+script.on_init(sync_interstellar_tech_gate)
+script.on_configuration_changed(sync_interstellar_tech_gate)
+
+script.on_event(defines.events.on_space_platform_changed_state, function(event)
+  check_platform_location(event.platform)
+end)
 
 local function get_platform_for_player(player)
   if player.surface and player.surface.platform then
@@ -487,6 +562,7 @@ script.on_nth_tick(60, function()
   each_platform(function(platform)
     if platform.valid then
       live_platform_keys[tostring(platform.index)] = true
+      check_platform_location(platform)
     end
     if platform.valid and platform.surface and platform.surface.valid then
       local fleet = get_fleet(platform)

@@ -45,6 +45,7 @@ data:extend({
     name = "interstellar-fleets",
     icon = "__interstellar-fleets__/graphics/technology/interstellar-fleets.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"promethium-science-pack"},
     unit = {
       count = 2000000,
@@ -63,6 +64,7 @@ data:extend({
     name = "quantum-replication",
     icon = "__interstellar-fleets__/graphics/technology/quantum-replication.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"interstellar-fleets"},
     unit = {
       count = 3000000,
@@ -92,6 +94,7 @@ data:extend({
     name = "antimatter-containment",
     icon = "__interstellar-fleets__/graphics/technology/antimatter-containment.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"quantum-replication"},
     unit = {
       count = 4000000,
@@ -107,6 +110,7 @@ data:extend({
     name = "interstellar-xenobiology",
     icon = "__interstellar-fleets__/graphics/technology/interstellar-xenobiology.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"quantum-replication"},
     unit = {
       count = 3500000,
@@ -126,6 +130,7 @@ data:extend({
     name = "quantum-fabrication",
     icon = "__interstellar-fleets__/graphics/technology/quantum-fabrication.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"quantum-replication"},
     unit = {
       count = 4500000,
@@ -144,6 +149,7 @@ data:extend({
     name = "orbital-industry",
     icon = "__interstellar-fleets__/graphics/technology/orbital-industry.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"quantum-fabrication"},
     unit = {
       count = 5000000,
@@ -162,6 +168,7 @@ data:extend({
     name = "fleet-printing",
     icon = "__interstellar-fleets__/graphics/technology/fleet-printing.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"antimatter-containment", "orbital-industry"},
     unit = {
       count = 5000000,
@@ -178,6 +185,7 @@ data:extend({
     name = "interstellar-dust-crushing",
     icon = "__interstellar-fleets__/graphics/technology/interstellar-dust-crushing.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"quantum-replication"},
     unit = {
       count = 2500000,
@@ -193,6 +201,7 @@ data:extend({
     name = "deep-dust-prospecting",
     icon = "__interstellar-fleets__/graphics/technology/deep-dust-prospecting.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"interstellar-dust-crushing"},
     unit = {
       count = 4000000,
@@ -208,6 +217,7 @@ data:extend({
     name = "stellar-fusion-drive-efficiency",
     icon = "__interstellar-fleets__/graphics/technology/stellar-fusion-drive-efficiency.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"interstellar-fleets"},
     upgrade = true,
     max_level = "infinite",
@@ -223,6 +233,7 @@ data:extend({
     name = "interstellar-dust-collection-productivity",
     icon = "__interstellar-fleets__/graphics/technology/interstellar-dust-collection-productivity.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"interstellar-fleets"},
     upgrade = true,
     max_level = "infinite",
@@ -238,6 +249,7 @@ data:extend({
     name = "quantum-replication-productivity",
     icon = "__interstellar-fleets__/graphics/technology/quantum-replication-productivity.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"quantum-replication"},
     upgrade = true,
     max_level = "infinite",
@@ -253,6 +265,7 @@ data:extend({
     name = "fleet-coordination",
     icon = "__interstellar-fleets__/graphics/technology/fleet-coordination.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"fleet-printing"},
     upgrade = true,
     max_level = "infinite",
@@ -268,6 +281,7 @@ data:extend({
     name = "antimatter-drive-efficiency",
     icon = "__interstellar-fleets__/graphics/technology/antimatter-drive-efficiency.png",
     icon_size = 128,
+    enabled = false,
     prerequisites = {"fleet-printing", "stellar-fusion-drive-efficiency"},
     upgrade = true,
     max_level = "infinite",
