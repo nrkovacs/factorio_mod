@@ -47,7 +47,7 @@ data:extend({
     icon_size = 128,
     prerequisites = {"promethium-science-pack"},
     unit = {
-      count = 2000,
+      count = 2000000,
       ingredients = late_science,
       time = 60
     },
@@ -65,7 +65,7 @@ data:extend({
     icon_size = 128,
     prerequisites = {"interstellar-fleets"},
     unit = {
-      count = 3000,
+      count = 3000000,
       ingredients = late_science,
       time = 60
     },
@@ -94,7 +94,7 @@ data:extend({
     icon_size = 128,
     prerequisites = {"quantum-replication"},
     unit = {
-      count = 4000,
+      count = 4000000,
       ingredients = late_science,
       time = 60
     },
@@ -109,7 +109,7 @@ data:extend({
     icon_size = 128,
     prerequisites = {"quantum-replication"},
     unit = {
-      count = 3500,
+      count = 3500000,
       ingredients = late_science,
       time = 60
     },
@@ -128,7 +128,7 @@ data:extend({
     icon_size = 128,
     prerequisites = {"quantum-replication"},
     unit = {
-      count = 4500,
+      count = 4500000,
       ingredients = late_science,
       time = 60
     },
@@ -146,7 +146,7 @@ data:extend({
     icon_size = 128,
     prerequisites = {"quantum-fabrication"},
     unit = {
-      count = 5000,
+      count = 5000000,
       ingredients = late_science,
       time = 60
     },
@@ -164,7 +164,7 @@ data:extend({
     icon_size = 128,
     prerequisites = {"antimatter-containment", "orbital-industry"},
     unit = {
-      count = 5000,
+      count = 5000000,
       ingredients = late_science,
       time = 60
     },
@@ -180,7 +180,7 @@ data:extend({
     icon_size = 128,
     prerequisites = {"quantum-replication"},
     unit = {
-      count = 2500,
+      count = 2500000,
       ingredients = late_science,
       time = 60
     },
@@ -195,7 +195,7 @@ data:extend({
     icon_size = 128,
     prerequisites = {"interstellar-dust-crushing"},
     unit = {
-      count = 4000,
+      count = 4000000,
       ingredients = late_science,
       time = 60
     },
@@ -212,7 +212,7 @@ data:extend({
     upgrade = true,
     max_level = "infinite",
     unit = {
-      count_formula = "1000 * 1.5 ^ (L - 1)",
+      count_formula = "1000000 * 1.5 ^ (L - 1)",
       ingredients = late_science,
       time = 60
     },
@@ -227,7 +227,7 @@ data:extend({
     upgrade = true,
     max_level = "infinite",
     unit = {
-      count_formula = "1200 * 1.45 ^ (L - 1)",
+      count_formula = "1200000 * 1.45 ^ (L - 1)",
       ingredients = late_science,
       time = 60
     },
@@ -242,7 +242,7 @@ data:extend({
     upgrade = true,
     max_level = "infinite",
     unit = {
-      count_formula = "1500 * 1.5 ^ (L - 1)",
+      count_formula = "1500000 * 1.5 ^ (L - 1)",
       ingredients = late_science,
       time = 60
     },
@@ -257,7 +257,7 @@ data:extend({
     upgrade = true,
     max_level = "infinite",
     unit = {
-      count_formula = "2000 * 1.55 ^ (L - 1)",
+      count_formula = "2000000 * 1.55 ^ (L - 1)",
       ingredients = late_science,
       time = 60
     },
@@ -272,7 +272,7 @@ data:extend({
     upgrade = true,
     max_level = "infinite",
     unit = {
-      count_formula = "1500 * 1.6 ^ (L - 1)",
+      count_formula = "1500000 * 1.6 ^ (L - 1)",
       ingredients = late_science,
       time = 60
     },
