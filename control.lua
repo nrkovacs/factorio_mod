@@ -70,6 +70,13 @@ local function mark_shattered_planet_reached(force, platform_name)
   end
   storage.shattered_reached[force.name] = true
   set_interstellar_techs_enabled(force, true)
+  -- The base tech is free: researching it here applies its effects,
+  -- including unlock-space-location for the galactic center.
+  local base = force.technologies["interstellar-fleets"]
+  if base and not base.researched then
+    base.researched = true
+  end
+  force.unlock_space_location("galactic-center")
   game.print({"interstellar-fleets.shattered-planet-reached", platform_name})
   for _, player in pairs(force.players) do
     player.unlock_achievement("interstellar-shattered-planet")
@@ -102,11 +109,27 @@ local function sync_interstellar_tech_gate()
       end
     end
     set_interstellar_techs_enabled(force, reached)
+    if reached then
+      local base = force.technologies["interstellar-fleets"]
+      if base and not base.researched then
+        base.researched = true
+      end
+      force.unlock_space_location("galactic-center")
+    else
+      force.lock_space_location("galactic-center")
+    end
   end
 end
 
 script.on_init(sync_interstellar_tech_gate)
 script.on_configuration_changed(sync_interstellar_tech_gate)
+
+script.on_event(defines.events.on_force_created, function(event)
+  init_storage()
+  if not storage.shattered_reached[event.force.name] then
+    event.force.lock_space_location("galactic-center")
+  end
+end)
 
 script.on_event(defines.events.on_space_platform_changed_state, function(event)
   check_platform_location(event.platform)

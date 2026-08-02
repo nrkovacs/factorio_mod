@@ -47,10 +47,13 @@ data:extend({
     icon_size = 128,
     enabled = false,
     prerequisites = {"promethium-science-pack"},
+    -- Costs no science: control.lua researches this automatically when a
+    -- platform reaches the shattered planet. The unit is a placeholder that
+    -- is never presented to the player for research.
     unit = {
-      count = 2000000,
-      ingredients = late_science,
-      time = 60
+      count = 1,
+      ingredients = {},
+      time = 1
     },
     effects = {
       {type = "unlock-recipe", recipe = "interstellar-lab"},
