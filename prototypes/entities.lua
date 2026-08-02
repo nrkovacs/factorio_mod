@@ -76,10 +76,37 @@ local dust_collector = copy_prototype("asteroid-collector", "asteroid-collector"
 dust_collector.collection_radius = 8
 apply_tint(dust_collector, {r = 1.0, g = 0.82, b = 0.35, a = 1.0})
 
-local fusion_drive = copy_prototype("thruster", "thruster", "stellar-fusion-drive")
+-- Drives are fueled by items (fusion power cells / antimatter) pulled from the
+-- hub during fleet boosts in control.lua, so they must not inherit the vanilla
+-- thruster's thruster-fuel/oxidizer fluid boxes. Build them as static
+-- structures that reuse the thruster's art and platform placement rules.
+local function make_drive(name)
+  local thruster = data.raw["thruster"]["thruster"]
+  return {
+    type = "simple-entity-with-owner",
+    name = name,
+    flags = table.deepcopy(thruster.flags),
+    icon = thruster.icon,
+    icon_size = thruster.icon_size,
+    collision_box = table.deepcopy(thruster.collision_box),
+    collision_mask = table.deepcopy(thruster.collision_mask),
+    selection_box = table.deepcopy(thruster.selection_box),
+    tile_buildability_rules = table.deepcopy(thruster.tile_buildability_rules),
+    surface_conditions = table.deepcopy(thruster.surface_conditions),
+    max_health = thruster.max_health,
+    minable = {mining_time = 0.1, result = name},
+    impact_category = thruster.impact_category,
+    corpse = thruster.corpse,
+    dying_explosion = thruster.dying_explosion,
+    placeable_position_visualization = table.deepcopy(thruster.placeable_position_visualization),
+    animations = table.deepcopy(thruster.graphics_set.animation)
+  }
+end
+
+local fusion_drive = make_drive("stellar-fusion-drive")
 apply_tint(fusion_drive, {r = 0.5, g = 0.85, b = 1.0, a = 1.0})
 
-local antimatter_drive = copy_prototype("thruster", "thruster", "antimatter-drive")
+local antimatter_drive = make_drive("antimatter-drive")
 apply_tint(antimatter_drive, {r = 0.78, g = 0.4, b = 1.0, a = 1.0})
 
 local space_foundry = copy_prototype("assembling-machine", "foundry", "interstellar-foundry")
