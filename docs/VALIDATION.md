@@ -2,6 +2,20 @@
 
 This document records the local checks used to validate the mod after source changes.
 
+## Original Blender art collection (2026-10-02)
+
+The art pipeline renders twelve original editable scenes in Blender 5.1.2. Nine machines produce eight-frame body, emission, and geometrically projected shadow passes; four collector directions bring the total to 288 frame/pass images. The packer derives all twelve icons, fourteen distinct technology images, individual samples, nine animated previews, the contact sheet, poster, and thumbnail from those renders.
+
+Verified locally:
+
+- All twelve saved Blender scenes open with scripts disabled and have editable geometry, materials, orthographic cameras, lighting, and no external dependencies.
+- Rendering the saved lab using `--from-blend` leaves its source file byte-for-byte unchanged.
+- `python scripts/test.py`: Lua 5.2 syntax, 215 prototype assertions, 26 runtime scenarios, deterministic ZIP contents, and the complete art audit pass.
+- Art audit: every atlas frame is nonempty and unclipped, transparency and animation variation are present, JSON and Lua placement metadata agree, checksums match, all generated game artwork is referenced by the prototypes, and all gallery links resolve.
+- The complete model contact sheet, emission separation, sample boards, and responsive gallery were visually reviewed.
+
+The real Factorio 2.0.77 CI companion additionally verifies custom body/shadow/glow fields, inactive lab behavior, collector directional rows, preserved native arms and fluid connections, unchanged placement footprints, and item-fueled drives. Its runtime regression still exercises populated platforms for 600 ticks. Headless CI validates loading and gameplay behavior; it does not provide visual client screenshots of the placed machines.
+
 ## Reproducible validation (0.2.2 review, 2026-10-01)
 
 Use Python 3.10+:

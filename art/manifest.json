@@ -1,0 +1,539 @@
+{
+  "schema_version": 2,
+  "collection": "Interstellar Fleets / original Blender art",
+  "generator": "scripts/pack_blender_assets.py",
+  "render_specification": "art/render-manifest.json",
+  "provenance": {
+    "renderer": {
+      "path": "scripts/blender_render_assets.py",
+      "sha256": "2168b2cdef7c71af5acd08fdadc1326f487a4d5043f9c86d295d506d5eb67a81"
+    },
+    "packer": {
+      "path": "scripts/pack_blender_assets.py",
+      "sha256": "83c959c57de80e59b2ad584a7bd498ad85d42e6749b1b18efeb844ae33a59713"
+    },
+    "render_specification": {
+      "path": "art/render-manifest.json",
+      "sha256": "fd9af7329e9db3328857399b955b96849a94fc056c3551f18509aa4450cb3b62"
+    }
+  },
+  "models": {
+    "interstellar-lab": {
+      "blend": "art/models/interstellar-lab.blend",
+      "hero": "art/renders/interstellar-lab.png",
+      "sample": "art/samples/interstellar-lab.png",
+      "icon": "graphics/icons/interstellar-lab.png",
+      "category": "entity",
+      "mesh_count": 154,
+      "sha256": {
+        "blend": "c0f0bb6928ed1261972856dad97e9d5f8886fd8e55f046e3380419667fd7ffad",
+        "hero": "e4078e68d68a9b007b8b91f81797509d8e046b3a99d2d633f18389dd67cd82cf",
+        "sample": "629e7bcecec9da793293cf03fc8db37e89f1b64cb369ed74c699bcc6987bd20a",
+        "icon": "cf4f425e305b12c3fa1f27687782674ce805a8df88be4679b71ef9243835a376"
+      }
+    },
+    "quantum-replicator": {
+      "blend": "art/models/quantum-replicator.blend",
+      "hero": "art/renders/quantum-replicator.png",
+      "sample": "art/samples/quantum-replicator.png",
+      "icon": "graphics/icons/quantum-replicator.png",
+      "category": "entity",
+      "mesh_count": 169,
+      "sha256": {
+        "blend": "33eda29d401c3a1dc8f0445cfd45e7c6f81733f1b2d9b27c98a22dcbe7344692",
+        "hero": "ed5219764e9e2db5da9b6fb91c0488b636b052ba585ea747bd4284ba37b26b6b",
+        "sample": "4f82b4e6c736d02acb06a1f47b5d66529495db8d8dc77386eab5724784a2b0f5",
+        "icon": "315dac1582d0b178036770412731dd85de09b5fba9b694407a7034f6f2832ad0"
+      }
+    },
+    "interstellar-dust-collector": {
+      "blend": "art/models/interstellar-dust-collector.blend",
+      "hero": "art/renders/interstellar-dust-collector.png",
+      "sample": "art/samples/interstellar-dust-collector.png",
+      "icon": "graphics/icons/interstellar-dust-collector.png",
+      "category": "entity",
+      "mesh_count": 123,
+      "sha256": {
+        "blend": "486e505c21db60020b77ccb59af1b540203cb7ca08d2719e4ff749a4d33dd879",
+        "hero": "cfb70943ff8b58862c45dfdbcc7cde2679667fdbb8779ed4dcfae45fac38907a",
+        "sample": "2d94ae2bc3974dda191aecacd7cf2bae093b6390073e4c65ccf5146a93495086",
+        "icon": "ac0c41d060f8000111720acd45a17b494fa3a585ce7fa09b3d68965ba0c45af1"
+      }
+    },
+    "stellar-fusion-drive": {
+      "blend": "art/models/stellar-fusion-drive.blend",
+      "hero": "art/renders/stellar-fusion-drive.png",
+      "sample": "art/samples/stellar-fusion-drive.png",
+      "icon": "graphics/icons/stellar-fusion-drive.png",
+      "category": "entity",
+      "mesh_count": 148,
+      "sha256": {
+        "blend": "b29ff7d5d547b784c27365c21bdb20b71eaab9e2b375ad10a3b68f28a57c06b3",
+        "hero": "f6ba5337ca18f4923eafbc1ffd8226bc99343911b97291ea7be8ebc5547406da",
+        "sample": "702ee4cf8760a0775053cd0f99336917c71919ffaf52cff858f556167176d22c",
+        "icon": "05678cadfa586ea649eec9f5ba24d62b598ab71f837928bc8c0bacaf61bf7b76"
+      }
+    },
+    "antimatter-drive": {
+      "blend": "art/models/antimatter-drive.blend",
+      "hero": "art/renders/antimatter-drive.png",
+      "sample": "art/samples/antimatter-drive.png",
+      "icon": "graphics/icons/antimatter-drive.png",
+      "category": "entity",
+      "mesh_count": 153,
+      "sha256": {
+        "blend": "cd03c8107652ebeb9fa9ad7d76c0640ac0f7603f686e40e23fa2038e3890ac90",
+        "hero": "07dfcd761827168af0223166157d29c4396612685afda809a6ac5f12cddd9c9f",
+        "sample": "7f1951a653372a24c5d1908780d43e0d4565914d343a0ad247f5fe5460b2b03d",
+        "icon": "fcc1a8bac29952f5c5b5704892a75d64888cb9f32f5b9306be45b9ed343a2919"
+      }
+    },
+    "interstellar-foundry": {
+      "blend": "art/models/interstellar-foundry.blend",
+      "hero": "art/renders/interstellar-foundry.png",
+      "sample": "art/samples/interstellar-foundry.png",
+      "icon": "graphics/icons/interstellar-foundry.png",
+      "category": "entity",
+      "mesh_count": 167,
+      "sha256": {
+        "blend": "233b0f8153391a7fb82294f386709c6c98baac7bb9859ac12661f7d05d7ba993",
+        "hero": "bc81788aed8eb09c547ace5d611c539c733b95fbba8e1d7fd6f7d277dd588bfc",
+        "sample": "c3f88a33d2e877b48054595931c4b61f0fcec3d0732084b9d1b463a32260d5c9",
+        "icon": "31e8a6ca9ec63af89db6cee2152b89d6cf393344d0f32bade0290404745c93b9"
+      }
+    },
+    "interstellar-electromagnetic-plant": {
+      "blend": "art/models/interstellar-electromagnetic-plant.blend",
+      "hero": "art/renders/interstellar-electromagnetic-plant.png",
+      "sample": "art/samples/interstellar-electromagnetic-plant.png",
+      "icon": "graphics/icons/interstellar-electromagnetic-plant.png",
+      "category": "entity",
+      "mesh_count": 128,
+      "sha256": {
+        "blend": "0291cccd014486efcad103250027be2ab075ac5d3e6dc0d23521635715f23d3c",
+        "hero": "b474f1530d34218094e4032cee8a8c54309ef1d54a45c967a4af78bc95af6b8e",
+        "sample": "b264d36aef2cbc4e6374a0086dbe8782b7c33fc84fefd334c8f3e321921bde3c",
+        "icon": "f4456348d5c0ab9c638aad9fb445047403e0b8a2ceb56a08565983538363c7da"
+      }
+    },
+    "interstellar-biochamber": {
+      "blend": "art/models/interstellar-biochamber.blend",
+      "hero": "art/renders/interstellar-biochamber.png",
+      "sample": "art/samples/interstellar-biochamber.png",
+      "icon": "graphics/icons/interstellar-biochamber.png",
+      "category": "entity",
+      "mesh_count": 125,
+      "sha256": {
+        "blend": "191f17baa2ce87c42a16233dfa17a061b9c46ec2372b8ab5cfbf7d83541bfea5",
+        "hero": "ac404be74830a5fb71c16cd2d76ffd46539977cc164fcc34a98e8513a384011e",
+        "sample": "ce73034de0d49f7b8c13be6832b254a2e0926469984a87606395fc3e9cff7d8e",
+        "icon": "92f70d0b4d05a94596e4c88cc1fbe865f261b3fcb71b2c23915f17d10fd3050b"
+      }
+    },
+    "interstellar-cryogenic-plant": {
+      "blend": "art/models/interstellar-cryogenic-plant.blend",
+      "hero": "art/renders/interstellar-cryogenic-plant.png",
+      "sample": "art/samples/interstellar-cryogenic-plant.png",
+      "icon": "graphics/icons/interstellar-cryogenic-plant.png",
+      "category": "entity",
+      "mesh_count": 212,
+      "sha256": {
+        "blend": "4f094d85c612c694744b4d0929119ae7656f3658c48f2d871c28d34ebaddd7b3",
+        "hero": "bf479d1776e437bf8d564eb049debd61a2d9d171312c8efbb6a783e83a3e2b1a",
+        "sample": "ac0ee78b485253327a1201a4443c8dc87d4d06f4eb179041fb45d21dccdb08b4",
+        "icon": "b7d5abcb502d112f2722063436796cdcd4e3e7245b6fc70a2037f26fd97cc39c"
+      }
+    },
+    "interstellar-dust": {
+      "blend": "art/models/interstellar-dust.blend",
+      "hero": "art/renders/interstellar-dust.png",
+      "sample": "art/samples/interstellar-dust.png",
+      "icon": "graphics/icons/interstellar-dust.png",
+      "category": "item",
+      "mesh_count": 37,
+      "sha256": {
+        "blend": "1dc815435e3bb180c877eeafdb31bbb499c65f120d760464dcaa38a289f93be6",
+        "hero": "20f3e1a314542b9ede7aa7d8b56ac497375f422a9c19e62e484a37554f2180a4",
+        "sample": "06df4fb91e8616204438ba8278f59bd34701f3f79ecb0dc069c0e924506eb75e",
+        "icon": "dfe25f88ba00985315b9a6b81d48b9d9198b30ad2a13070c1105779d7e054a14"
+      }
+    },
+    "antimatter": {
+      "blend": "art/models/antimatter.blend",
+      "hero": "art/renders/antimatter.png",
+      "sample": "art/samples/antimatter.png",
+      "icon": "graphics/icons/antimatter.png",
+      "category": "item",
+      "mesh_count": 27,
+      "sha256": {
+        "blend": "bb115beea89efe04261faa5eb302a57dc5a0608adc9cec50e51af8ce135648c9",
+        "hero": "29e3e2571ab4b54eb4fda98df20726078a3d92f087e0d076b185511d886b6a78",
+        "sample": "8a2798959b48d3ad5376a97e7275f0ff18ae83e4438b066e24973e07ad121d94",
+        "icon": "dd72ae634a464ccb5ab05b0d6361e44eb13818d22e74c77beefc2b85f6a3c186"
+      }
+    },
+    "ship-starter-pack": {
+      "blend": "art/models/ship-starter-pack.blend",
+      "hero": "art/renders/ship-starter-pack.png",
+      "sample": "art/samples/ship-starter-pack.png",
+      "icon": "graphics/icons/ship-starter-pack.png",
+      "category": "item",
+      "mesh_count": 113,
+      "sha256": {
+        "blend": "05bfb2de67ec6b67bb32ef2b546b0cecd79e994482eee9001b8cfc258bf369ed",
+        "hero": "48b5be22b8460459fc3f1b53e068e504a4a5ff046644ff36f0cb7b7e91d98117",
+        "sample": "6a9d65d09a2eb6cd51395ab3b71bcc34761ca8cbad4d5ec913bcad467173f969",
+        "icon": "ec012a87b3e2cd8017fe9814ed19de66c9fc5aa99112211c04721fcf4819b06e"
+      }
+    }
+  },
+  "entities": {
+    "interstellar-lab": {
+      "width": 512,
+      "height": 512,
+      "frame_count": 8,
+      "line_length": 8,
+      "directions": 1,
+      "scale": 0.575,
+      "shift": [
+        0,
+        -0.7424621202458749
+      ],
+      "animation_speed": 0.15,
+      "sha256": {
+        "animation": "92899c21b790782fdb5b5f704b74be22a60378dca725eac828dfb8c085aae697",
+        "glow": "cb4653465b3b754b662963939b95ea8736d08677b0a88ef9e528e5243b552cff",
+        "shadow": "3d2a449336da576c166c5ff01b4fed8d5353668c774d49018e836a8ed5499b2c",
+        "preview": "eca6cfcac2f543a6f2f82ab516f28dce36184b8be8e78c45bae88dd387f9199e"
+      },
+      "animation": "graphics/entity/interstellar-lab/interstellar-lab-animation.png",
+      "glow": "graphics/entity/interstellar-lab/interstellar-lab-glow.png",
+      "shadow": "graphics/entity/interstellar-lab/interstellar-lab-shadow.png",
+      "preview": "graphics/previews/interstellar-lab.gif"
+    },
+    "quantum-replicator": {
+      "width": 512,
+      "height": 512,
+      "frame_count": 8,
+      "line_length": 8,
+      "directions": 1,
+      "scale": 0.5125,
+      "shift": [
+        0,
+        -0.7424621202458749
+      ],
+      "animation_speed": 0.15,
+      "sha256": {
+        "animation": "c60d8e9d7da04335a9ce3e32167e0f710203125eda5d35731cd05145909e4322",
+        "glow": "c84d8dab97211f4f2c08bc0fe8efac2f041f11f57d661690978dbb2f1b6e06fd",
+        "shadow": "28a43abb6098d6e21b1c4f9208485f879efbe4a78a3d6b3ac284bb4e50ca9202",
+        "preview": "d0ff1aa54e09c2f7dfd397d01322cba500333088fc9099e09ea072a4e39e14f8"
+      },
+      "animation": "graphics/entity/quantum-replicator/quantum-replicator-animation.png",
+      "glow": "graphics/entity/quantum-replicator/quantum-replicator-glow.png",
+      "shadow": "graphics/entity/quantum-replicator/quantum-replicator-shadow.png",
+      "preview": "graphics/previews/quantum-replicator.gif"
+    },
+    "interstellar-dust-collector": {
+      "width": 512,
+      "height": 512,
+      "frame_count": 8,
+      "line_length": 8,
+      "directions": 4,
+      "scale": 0.45,
+      "shift": [
+        0,
+        -0.7424621202458749
+      ],
+      "animation_speed": 0.15,
+      "sha256": {
+        "animation": "54962f76ecee07e8b139e50fab79efbd0d641ad50c319676abcd220dd33603de",
+        "glow": "8e0aa9c862d04eabf512cf2db5e6d23e3c4bcd395dc3b4b484f45a46babdb466",
+        "shadow": "30a256148d95bddc0db6436653cb01f53efc910b1caca74cb2c1a4923211291a",
+        "preview": "58bb35773f860d6b7f2bf5d527b4ca4f2a5218d81af0c1b9908e221542ce66ae"
+      },
+      "animation": "graphics/entity/interstellar-dust-collector/interstellar-dust-collector-animation.png",
+      "glow": "graphics/entity/interstellar-dust-collector/interstellar-dust-collector-glow.png",
+      "shadow": "graphics/entity/interstellar-dust-collector/interstellar-dust-collector-shadow.png",
+      "preview": "graphics/previews/interstellar-dust-collector.gif"
+    },
+    "stellar-fusion-drive": {
+      "width": 512,
+      "height": 512,
+      "frame_count": 8,
+      "line_length": 8,
+      "directions": 1,
+      "scale": 0.58125,
+      "shift": [
+        0,
+        -0.7424621202458749
+      ],
+      "animation_speed": 0.15,
+      "sha256": {
+        "animation": "b9006361e303280dae408cd48e4f795f9944436e68df1e4639ab81317eaf17a3",
+        "glow": "f482eb755884ad2223d0741e8e1533c521236406ee850a8f43eb0bf20f6c244a",
+        "shadow": "97a2a6334d744a2dffcb14acb851c1316542e1d1e5b77da427a69b4f26398c00",
+        "preview": "10a2714d9799a07c5bfe0e76490426bf78f83d2ac912d9a5a1e874a260c8a78f"
+      },
+      "animation": "graphics/entity/stellar-fusion-drive/stellar-fusion-drive-animation.png",
+      "glow": "graphics/entity/stellar-fusion-drive/stellar-fusion-drive-glow.png",
+      "shadow": "graphics/entity/stellar-fusion-drive/stellar-fusion-drive-shadow.png",
+      "preview": "graphics/previews/stellar-fusion-drive.gif"
+    },
+    "antimatter-drive": {
+      "width": 512,
+      "height": 512,
+      "frame_count": 8,
+      "line_length": 8,
+      "directions": 1,
+      "scale": 0.58125,
+      "shift": [
+        0,
+        -0.7424621202458749
+      ],
+      "animation_speed": 0.15,
+      "sha256": {
+        "animation": "c55a92c5242b7564323f33b5d2958ed16cab4874ecad8a35d8f72b55b3020a61",
+        "glow": "d65ce95d772097d2810e667bdc10b73d332515a687e5b280af35b3f49a4bb5d9",
+        "shadow": "97a2a6334d744a2dffcb14acb851c1316542e1d1e5b77da427a69b4f26398c00",
+        "preview": "f3e7a11b55f72095f06e6e957d4c9180f87d129f4532f8406a5f5360a40e7b39"
+      },
+      "animation": "graphics/entity/antimatter-drive/antimatter-drive-animation.png",
+      "glow": "graphics/entity/antimatter-drive/antimatter-drive-glow.png",
+      "shadow": "graphics/entity/antimatter-drive/antimatter-drive-shadow.png",
+      "preview": "graphics/previews/antimatter-drive.gif"
+    },
+    "interstellar-foundry": {
+      "width": 512,
+      "height": 512,
+      "frame_count": 8,
+      "line_length": 8,
+      "directions": 1,
+      "scale": 0.575,
+      "shift": [
+        0,
+        -0.7424621202458749
+      ],
+      "animation_speed": 0.15,
+      "sha256": {
+        "animation": "19f68b45a3a6767de88b09f687d68f32427fc3beadb3d35a82f0b1a61b9bc9d8",
+        "glow": "4af854453736623cae93a71cec54cdf613de9100223eda7dc9f9234d7c8f839f",
+        "shadow": "41188cf1cf6b9e1900c3f08b9b49f100721a73911d131b99ea1189ff911a01f9",
+        "preview": "ab26722b590e3da3b2c1fc0ba04b92e3c6d7f2dd7ae47beee5310874d607c1be"
+      },
+      "animation": "graphics/entity/interstellar-foundry/interstellar-foundry-animation.png",
+      "glow": "graphics/entity/interstellar-foundry/interstellar-foundry-glow.png",
+      "shadow": "graphics/entity/interstellar-foundry/interstellar-foundry-shadow.png",
+      "preview": "graphics/previews/interstellar-foundry.gif"
+    },
+    "interstellar-electromagnetic-plant": {
+      "width": 512,
+      "height": 512,
+      "frame_count": 8,
+      "line_length": 8,
+      "directions": 1,
+      "scale": 0.5125,
+      "shift": [
+        0,
+        -0.7424621202458749
+      ],
+      "animation_speed": 0.15,
+      "sha256": {
+        "animation": "420c719c83bbbc6643f39fbcf709dd0cd1a3c7be29a55b85638d504832ebbad9",
+        "glow": "e5a23be1ef2b3bdbbca366b8605aa990bd00ef496c0b45b57ac9e8a5d79a7450",
+        "shadow": "8f3bc89075f3d9b6ccfacea9ec78c000bd35ac64c3b1f50b94ce59b1fd6fac7f",
+        "preview": "f521ba22b2999bd3ed88d4f1bacf1f00bee540582bf678b954d899643ed020e8"
+      },
+      "animation": "graphics/entity/interstellar-electromagnetic-plant/interstellar-electromagnetic-plant-animation.png",
+      "glow": "graphics/entity/interstellar-electromagnetic-plant/interstellar-electromagnetic-plant-glow.png",
+      "shadow": "graphics/entity/interstellar-electromagnetic-plant/interstellar-electromagnetic-plant-shadow.png",
+      "preview": "graphics/previews/interstellar-electromagnetic-plant.gif"
+    },
+    "interstellar-biochamber": {
+      "width": 512,
+      "height": 512,
+      "frame_count": 8,
+      "line_length": 8,
+      "directions": 1,
+      "scale": 0.45,
+      "shift": [
+        0,
+        -0.7424621202458749
+      ],
+      "animation_speed": 0.15,
+      "sha256": {
+        "animation": "ebff9ed2efa78fe3ac7d3673749c9d930daf681e3195ba6fd90aa89883921d19",
+        "glow": "610c45bee429734f9d3276a66210411f9792d5cccc4d1fa540c9ed3870c0bde9",
+        "shadow": "dad48e1514dd47c8a22c64077da94d7e41e5d44249e8b9cf53edd3f529c8b3f0",
+        "preview": "6babadba5f3e10bf0d02a988b0290010888debe0140fb11683fe4b4f37b1a562"
+      },
+      "animation": "graphics/entity/interstellar-biochamber/interstellar-biochamber-animation.png",
+      "glow": "graphics/entity/interstellar-biochamber/interstellar-biochamber-glow.png",
+      "shadow": "graphics/entity/interstellar-biochamber/interstellar-biochamber-shadow.png",
+      "preview": "graphics/previews/interstellar-biochamber.gif"
+    },
+    "interstellar-cryogenic-plant": {
+      "width": 512,
+      "height": 512,
+      "frame_count": 8,
+      "line_length": 8,
+      "directions": 1,
+      "scale": 0.575,
+      "shift": [
+        0,
+        -0.7424621202458749
+      ],
+      "animation_speed": 0.15,
+      "sha256": {
+        "animation": "7312e2ffbd00416f8a12c3d217f38a51ec9ad7ca1e63269f6dd491065b956fc3",
+        "glow": "61fb3d25432f1567672df56ad5e9ab547bb476c122e27cfe9c0fcc5a2a2bedc0",
+        "shadow": "fc46986dd244670f46fc71e2f82b0bb980eac1df026c2d80598adb8d9099c42e",
+        "preview": "87209eb5eda1c48102dbc6070c82692d785215a5e99bcb236ed7f4d1cf98817f"
+      },
+      "animation": "graphics/entity/interstellar-cryogenic-plant/interstellar-cryogenic-plant-animation.png",
+      "glow": "graphics/entity/interstellar-cryogenic-plant/interstellar-cryogenic-plant-glow.png",
+      "shadow": "graphics/entity/interstellar-cryogenic-plant/interstellar-cryogenic-plant-shadow.png",
+      "preview": "graphics/previews/interstellar-cryogenic-plant.gif"
+    }
+  },
+  "technologies": {
+    "interstellar-fleets": {
+      "path": "graphics/technology/interstellar-fleets.png",
+      "source_models": [
+        "ship-starter-pack",
+        "interstellar-lab"
+      ],
+      "glyph": "orbit",
+      "sha256": "6443e2ab5e02e9a4d8e1966aef4679c3a207a4eb7bd2cd4b069d1c9c011ec2e3"
+    },
+    "quantum-replication": {
+      "path": "graphics/technology/quantum-replication.png",
+      "source_models": [
+        "quantum-replicator"
+      ],
+      "glyph": "duplicate",
+      "sha256": "d3a3f48af13f2ae163d90891ad468114ac42f97c2b235107f3f0afd671640061"
+    },
+    "antimatter-containment": {
+      "path": "graphics/technology/antimatter-containment.png",
+      "source_models": [
+        "antimatter"
+      ],
+      "glyph": "shield",
+      "sha256": "5e9d0668fd8c927e531e989dda8c6745f6ee48c63cb234284443d3da9e2d23d2"
+    },
+    "interstellar-xenobiology": {
+      "path": "graphics/technology/interstellar-xenobiology.png",
+      "source_models": [
+        "interstellar-biochamber"
+      ],
+      "glyph": "helix",
+      "sha256": "435e04432db39f9eb8a875747b1b7f73749ed50e12c62ca00945b8939d978cd6"
+    },
+    "quantum-fabrication": {
+      "path": "graphics/technology/quantum-fabrication.png",
+      "source_models": [
+        "interstellar-electromagnetic-plant",
+        "quantum-replicator"
+      ],
+      "glyph": "chip",
+      "sha256": "126fa6f4edd5f1a2e6b13e334b8b10fee58e8441bd425ca29309a4c716de1fd7"
+    },
+    "orbital-industry": {
+      "path": "graphics/technology/orbital-industry.png",
+      "source_models": [
+        "interstellar-foundry",
+        "interstellar-cryogenic-plant"
+      ],
+      "glyph": "factory",
+      "sha256": "2a75b186881b23cccc3db54ca029c3e5fe90c553bcde34f917c8594a58b594b7"
+    },
+    "fleet-printing": {
+      "path": "graphics/technology/fleet-printing.png",
+      "source_models": [
+        "ship-starter-pack",
+        "quantum-replicator"
+      ],
+      "glyph": "plus",
+      "sha256": "f971bfb94856e3d4c8d3721c1a92dd841177bddd4d606fe809d7f68c0ad97fbc"
+    },
+    "interstellar-dust-crushing": {
+      "path": "graphics/technology/interstellar-dust-crushing.png",
+      "source_models": [
+        "interstellar-dust"
+      ],
+      "glyph": "crush",
+      "sha256": "29ffb9068717f0ed386c6ba95abde7f362740f77318da836cb881b13a9771345"
+    },
+    "deep-dust-prospecting": {
+      "path": "graphics/technology/deep-dust-prospecting.png",
+      "source_models": [
+        "interstellar-dust-collector",
+        "interstellar-dust"
+      ],
+      "glyph": "scan",
+      "sha256": "239f4776dd346a2a19f6d444dc36e0a0cbf265f4a2d1605219e250324e40c4f5"
+    },
+    "stellar-fusion-drive-efficiency": {
+      "path": "graphics/technology/stellar-fusion-drive-efficiency.png",
+      "source_models": [
+        "stellar-fusion-drive"
+      ],
+      "glyph": "energy",
+      "sha256": "4e30df826eeed67a944b3b7acd9e30efe87cfc2f7e0219076f931e6fd100f901"
+    },
+    "antimatter-drive-efficiency": {
+      "path": "graphics/technology/antimatter-drive-efficiency.png",
+      "source_models": [
+        "antimatter-drive"
+      ],
+      "glyph": "double-energy",
+      "sha256": "0898788851197a12305123747a5983f1aecda3065fa03477153f4eb9af62f2c4"
+    },
+    "interstellar-dust-collection-productivity": {
+      "path": "graphics/technology/interstellar-dust-collection-productivity.png",
+      "source_models": [
+        "interstellar-dust-collector"
+      ],
+      "glyph": "bars",
+      "sha256": "1fbe38b3d7a4a463e69ab2e8a3a69a216b076a9baa30a71c1175102c5d97fc55"
+    },
+    "quantum-replication-productivity": {
+      "path": "graphics/technology/quantum-replication-productivity.png",
+      "source_models": [
+        "quantum-replicator",
+        "antimatter"
+      ],
+      "glyph": "rising",
+      "sha256": "cf14bf027584982876ab69edceb1de28aa134e732a2e50a56476755f16ac59e0"
+    },
+    "fleet-coordination": {
+      "path": "graphics/technology/fleet-coordination.png",
+      "source_models": [
+        "ship-starter-pack"
+      ],
+      "glyph": "network",
+      "sha256": "ca863bba15d4d3a9503a137ed69d73b08aae987eb00081e4faa1c56b25bdc6c0"
+    }
+  },
+  "presentation": {
+    "contact_sheet": {
+      "path": "graphics/art-preview-sheet.png",
+      "width": 1800,
+      "height": 1600,
+      "sha256": "32182eab27709706ee9cf794eacd48ac3272e38eb2d40ab29f3c871cd44f1640"
+    },
+    "key_art": {
+      "path": "art/samples/fleet-key-art.png",
+      "width": 1600,
+      "height": 1000,
+      "sha256": "956099ef684a22cc5283db6f7bc15929aac3081e078ce520d6d35e4ea26e9efd"
+    },
+    "thumbnail": {
+      "path": "thumbnail.png",
+      "width": 144,
+      "height": 144,
+      "sha256": "a1ebb12770698d35695619e8f83d6b4799eb63def8d6061e9bf7a06497bd2db8"
+    }
+  }
+}

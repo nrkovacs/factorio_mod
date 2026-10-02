@@ -9,7 +9,7 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_PATHS = (
     "control.lua", "data.lua", "info.json", "thumbnail.png", "README.md",
-    "docs", "graphics", "locale", "prototypes", "sound", "wiki",
+    "docs", "graphics", "locale", "prototypes", "sound", "wiki", "art",
 )
 
 

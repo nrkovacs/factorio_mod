@@ -1,0 +1,125 @@
+{
+  "schema_version": 2,
+  "assets": {
+    "interstellar-lab": {
+      "kind": "lab",
+      "tiles": 5,
+      "color": [
+        0.08,
+        0.56,
+        0.57
+      ],
+      "code": "IL-09"
+    },
+    "quantum-replicator": {
+      "kind": "replicator",
+      "tiles": 4,
+      "color": [
+        0.43,
+        0.18,
+        0.7
+      ],
+      "code": "QR-04"
+    },
+    "interstellar-dust-collector": {
+      "kind": "collector",
+      "tiles": 3,
+      "color": [
+        0.9,
+        0.48,
+        0.08
+      ],
+      "code": "DC-03"
+    },
+    "stellar-fusion-drive": {
+      "kind": "fusion",
+      "tiles": 4,
+      "color": [
+        0.06,
+        0.44,
+        0.81
+      ],
+      "code": "SF-07"
+    },
+    "antimatter-drive": {
+      "kind": "antidrive",
+      "tiles": 4,
+      "color": [
+        0.53,
+        0.16,
+        0.7
+      ],
+      "code": "AM-08"
+    },
+    "interstellar-foundry": {
+      "kind": "foundry",
+      "tiles": 5,
+      "color": [
+        0.78,
+        0.22,
+        0.045
+      ],
+      "code": "IF-05"
+    },
+    "interstellar-electromagnetic-plant": {
+      "kind": "electro",
+      "tiles": 4,
+      "color": [
+        0.08,
+        0.47,
+        0.44
+      ],
+      "code": "EM-06"
+    },
+    "interstellar-biochamber": {
+      "kind": "bio",
+      "tiles": 3,
+      "color": [
+        0.24,
+        0.54,
+        0.075
+      ],
+      "code": "BC-02"
+    },
+    "interstellar-cryogenic-plant": {
+      "kind": "cryo",
+      "tiles": 5,
+      "color": [
+        0.18,
+        0.54,
+        0.68
+      ],
+      "code": "CP-01"
+    },
+    "interstellar-dust": {
+      "kind": "dust",
+      "tiles": 2,
+      "color": [
+        0.34,
+        0.48,
+        0.65
+      ],
+      "code": "ID-11"
+    },
+    "antimatter": {
+      "kind": "capsule",
+      "tiles": 2,
+      "color": [
+        0.55,
+        0.16,
+        0.77
+      ],
+      "code": "AC-12"
+    },
+    "ship-starter-pack": {
+      "kind": "ship",
+      "tiles": 4,
+      "color": [
+        0.14,
+        0.49,
+        0.57
+      ],
+      "code": "SP-10"
+    }
+  }
+}

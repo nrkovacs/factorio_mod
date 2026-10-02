@@ -5,3 +5,7 @@ validation/
 dist/_staging/
 dist/*.tmp
 dist/*.zip
+
+# Regenerable render passes and Blender backup snapshots
+tmp/
+*.blend[0-9]

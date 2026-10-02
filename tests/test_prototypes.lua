@@ -189,12 +189,23 @@ end
 
 local replicator = data.raw["assembling-machine"]["quantum-replicator"]
 check(equal(replicator.crafting_categories, {"interstellar-replication"}), "replicator is not a general-purpose electromagnetic plant")
-check(replicator.graphics_set.animation.layers[1].tint ~= nil, "entity sprite is tinted")
+check(replicator.graphics_set.animation.layers[1].filename ==
+  "__interstellar-fleets__/graphics/entity/quantum-replicator/quantum-replicator-animation.png",
+  "placed replicator uses its custom Blender artwork")
+check(replicator.graphics_set.animation.layers[2].draw_as_shadow == true,
+  "custom shadow uses Factorio's shadow render pass")
 check(replicator.graphics_set.animation.layers[2].tint == nil, "shadow is not tinted")
+check(replicator.graphics_set.working_visualisations[1].animation.draw_as_glow == true,
+  "replicator emission is an activity-dependent glow")
+check(replicator.icons[1].icon == "__interstellar-fleets__/graphics/icons/quantum-replicator.png",
+  "replicator icon matches its placed artwork")
 check(replicator.working_sound.sound.tint == nil, "sound is not treated as a sprite")
 for _, name in ipairs({"stellar-fusion-drive", "antimatter-drive"}) do
   check(data.raw["simple-entity-with-owner"][name] ~= nil, name .. " uses the static drive type")
   check(data.raw.thruster[name] == nil, name .. " does not inherit fluid fuel requirements")
+  check(data.raw["simple-entity-with-owner"][name].animations.layers[1].filename ==
+    "__interstellar-fleets__/graphics/entity/" .. name .. "/" .. name .. "-animation.png",
+    name .. " uses custom art through the simple entity animations property")
 end
 
 print("Prototype regression checks passed: " .. checks)
