@@ -67,6 +67,19 @@ local function connection_visual_names(value, names)
   for _, child in pairs(value) do connection_visual_names(child, names) end
 end
 
+local function check_visual_references(value, names, entity_name)
+  if type(value) ~= "table" then return end
+  for _, field in ipairs({"enable_working_visualisations", "play_for_working_visualisations"}) do
+    for _, name in ipairs(value[field] or {}) do
+      assert(names[name], entity_name .. " references missing working visualisation " .. name)
+    end
+  end
+  if value.play_for_working_visualisation then
+    assert(names[value.play_for_working_visualisation], entity_name .. " sound accent references a missing working visualisation")
+  end
+  for _, child in pairs(value) do check_visual_references(child, names, entity_name) end
+end
+
 local machines = {
   {"lab", "interstellar-lab", "lab", "biolab"},
   {"assembling-machine", "quantum-replicator", "assembling-machine", "electromagnetic-plant"},
@@ -81,6 +94,11 @@ local machines = {
 for _, row in ipairs(machines) do
   local kind, name, source_kind, source_name = table.unpack(row)
   local entity, source = data.raw[kind][name], data.raw[source_kind][source_name]
+  local visual_names = {}
+  for _, visual in ipairs((entity.graphics_set or {}).working_visualisations or {}) do
+    if visual.name then visual_names[visual.name] = true end
+  end
+  check_visual_references(entity, visual_names, name)
   assert(entity.icons and #entity.icons == 1 and entity.icons[1].icon == art_root .. "icons/" .. name .. ".png",
     name .. " entity icon must match its model")
   assert(same(data.raw.item[name].icons, entity.icons), name .. " item and entity icons disagree")

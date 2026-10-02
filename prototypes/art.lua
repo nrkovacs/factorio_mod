@@ -62,13 +62,28 @@ local function glow_visualisation(name)
   return result
 end
 
-local function remove_sound_accents(sound)
+local function prepare_working_sound(sound)
   if type(sound) ~= "table" then return end
+  -- Space Age's electromagnetic plant has separate warm-up, rotation and
+  -- cool-down loops. The custom art has one working cycle, so retain only its
+  -- steady rotation loop instead of playing all three transitions together.
+  for _, main in ipairs(sound.main_sounds or {}) do
+    for _, visual in ipairs(main.play_for_working_visualisations or {}) do
+      if visual == "rotation" then
+        sound.main_sounds = {main}
+        break
+      end
+    end
+    if #sound.main_sounds == 1 then break end
+  end
   -- Vanilla accents refer to frames in much longer animation cycles. Preserve
-  -- the loop sounds, but do not trigger out-of-range or mistimed frame accents.
+  -- the loop sounds, but remove their obsolete visual gates and frame accents.
+  -- WorkingSound itself can inherit the MainSound visual-gate property, so this
+  -- cleanup also covers that form and nested main_sounds entries.
   sound.sound_accents = nil
+  sound.play_for_working_visualisations = nil
   for _, child in pairs(sound) do
-    remove_sound_accents(child)
+    prepare_working_sound(child)
   end
 end
 
@@ -79,7 +94,7 @@ local function apply_common(prototype)
   prototype.icons = {{icon = root .. "icons/" .. prototype.name .. ".png", icon_size = 64}}
   prototype.water_reflection = nil
   prototype.factoriopedia_simulation = nil
-  remove_sound_accents(prototype.working_sound)
+  prepare_working_sound(prototype.working_sound)
 end
 
 local function connected_visualisations(prototype)
