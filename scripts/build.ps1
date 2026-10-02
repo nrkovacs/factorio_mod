@@ -1,46 +1,15 @@
 $ErrorActionPreference = "Stop"
 
-$repoRoot = Split-Path -Parent $PSScriptRoot
-$info = Get-Content -LiteralPath (Join-Path $repoRoot "info.json") -Raw | ConvertFrom-Json
-$packageName = "$($info.name)_$($info.version)"
-$dist = Join-Path $repoRoot "dist"
-$stagingRoot = Join-Path $dist "_staging"
-$packageRoot = Join-Path $stagingRoot $packageName
-$zipPath = Join-Path $dist "$packageName.zip"
-
-$paths = @(
-  "control.lua",
-  "data.lua",
-  "info.json",
-  "thumbnail.png",
-  "README.md",
-  "docs",
-  "graphics",
-  "locale",
-  "prototypes",
-  "sound",
-  "wiki"
-)
-
-if (Test-Path $stagingRoot) {
-  Remove-Item -LiteralPath $stagingRoot -Recurse -Force
+# Use the same portable ZIP builder on Windows, macOS, Linux, and CI.
+# Windows Compress-Archive can create backslash entries that Linux Factorio
+# does not recognize as directories.
+if (Get-Command python -ErrorAction SilentlyContinue) {
+  & python (Join-Path $PSScriptRoot "build.py")
+} elseif (Get-Command py -ErrorAction SilentlyContinue) {
+  & py -3 (Join-Path $PSScriptRoot "build.py")
+} else {
+  throw "Python 3 is required. Install it, then run python scripts/build.py."
 }
-New-Item -ItemType Directory -Path $packageRoot | Out-Null
-
-foreach ($path in $paths) {
-  $source = Join-Path $repoRoot $path
-  $destination = Join-Path $packageRoot $path
-  if (Test-Path $source -PathType Container) {
-    Copy-Item -LiteralPath $source -Destination $destination -Recurse -Force
-  } else {
-    Copy-Item -LiteralPath $source -Destination $destination -Force
-  }
+if ($LASTEXITCODE -ne 0) {
+  throw "Mod packaging failed (exit code $LASTEXITCODE)."
 }
-
-if (Test-Path $zipPath) {
-  Remove-Item -LiteralPath $zipPath -Force
-}
-
-Compress-Archive -Path $packageRoot -DestinationPath $zipPath -Force
-Remove-Item -LiteralPath $stagingRoot -Recurse -Force
-Write-Output $zipPath

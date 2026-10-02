@@ -156,6 +156,7 @@ local recipes = {
     type = "recipe",
     name = "dust-fusion-energy-cell",
     category = "interstellar-replication",
+    auto_recycle = false,
     enabled = false,
     energy_required = 10,
     ingredients = {{type = "item", name = "interstellar-dust", amount = 50}},
@@ -165,6 +166,7 @@ local recipes = {
     type = "recipe",
     name = "replicate-antimatter",
     category = "interstellar-replication",
+    auto_recycle = false,
     enabled = false,
     energy_required = 120,
     ingredients = {
@@ -224,11 +226,35 @@ for _, recipe in pairs(replication_recipes) do
     type = "recipe",
     name = recipe[1],
     category = "interstellar-replication",
+    -- Replication must not replace the product's vanilla recycling recipe
+    -- with a dust-return recipe when quality generates reverse recipes.
+    auto_recycle = false,
     enabled = false,
     energy_required = recipe[3],
     ingredients = {{type = "item", name = "interstellar-dust", amount = recipe[3]}},
     results = {{type = "item", name = recipe[2], amount = recipe[4]}}
   }
+end
+
+-- Recipe surface restrictions are independent of machine placement rules.
+-- Keep the original planet-only recipes intact and expose copies solely to
+-- the dedicated interstellar machines through their extra categories.
+for _, definition in ipairs({
+  {"metallurgic-science-pack", "interstellar-metallurgy"},
+  {"electromagnetic-science-pack", "interstellar-electromagnetics"},
+  {"agricultural-science-pack", "interstellar-organic"},
+  {"cryogenic-science-pack", "interstellar-cryogenics"}
+}) do
+  local source_name, category = definition[1], definition[2]
+  local recipe = table.deepcopy(data.raw.recipe[source_name])
+  recipe.name = "interstellar-" .. source_name
+  recipe.localised_name = {"recipe-name." .. recipe.name}
+  recipe.category = category
+  recipe.surface_conditions = nil
+  recipe.enabled = false
+  recipe.auto_recycle = false
+  recipes[#recipes + 1] = {type = "recipe-category", name = category}
+  recipes[#recipes + 1] = recipe
 end
 
 data:extend(recipes)

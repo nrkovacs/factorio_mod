@@ -2,7 +2,28 @@
 
 This document records the local checks used to validate the mod after source changes.
 
-## Command-Line Smoke Tests
+## Reproducible validation (0.2.2 review, 2026-10-01)
+
+Use Python 3.10+:
+
+```sh
+python -m pip install -r requirements-dev.txt
+python scripts/test.py
+python scripts/build.py
+python scripts/smoke_test.py /path/to/factorio/bin/x64/factorio
+```
+
+Local 2026-10-01 results: 26 runtime scenarios, 210 prototype assertions, portable/reproducible package checks, and art validation passed. The populated-platform Factorio 2.0.77 test passed 600 ticks. A separate real-engine 0.2.1 → 0.2.2 save upgrade with Orbital industry already researched confirmed all four new recipes enabled automatically.
+
+The offline suite loads the actual Lua files with Lua 5.2. It covers runtime failure paths, surface-effect ownership, dust throughput, layout matching, orbital-science isolation, recycling flags, and deterministic package contents. The separate headless suite loads the built ZIP with the real Space Age data stage, checks that vanilla recipe restrictions remain intact, then exercises actual fleet merge/split and additive surface effects.
+
+The original committed 0.2.1 archive contains Windows backslashes. Factorio 2.0.77 on Linux reports a mod package read error and may still exit successfully after creating a vanilla save. The new builder always uses POSIX archive paths, and validation requires the mod load line plus an explicit runtime completion marker. An exit code alone is no longer accepted as proof of mod validation.
+
+The free [official headless download](https://factorio.com/download) includes Space Age. CI pins 2.0.77 and verifies SHA-256 `c4efc11529f74d37c96933e291e0db73fd9f5aa4738913d9301b24680b3e947f` against the official release checksum. Validation logs and the generated release ZIP are retained as CI artifacts.
+
+Remaining limits: constructing additional fleets still requires imported planet-built components such as fusion generators, electromagnetic plants, and biolabs. This is headless validation, not visual client QA or long-duration large-fleet balance testing. Cryogenic science still needs imported fluorine/ammonia or fluoroketone. Split hubs start empty, but machine/belt/fluid state is still cloned rather than divided; that economy design remains open. Older fleet signatures require `Update blueprint` once after upgrading.
+
+## Historical Command-Line Smoke Tests
 
 Use an isolated Factorio config so validation does not interfere with the user's normal saves or running game:
 
@@ -106,7 +127,7 @@ This means a platform with a valid hub, at least one collector, power, and a qua
 ## Balance Review
 
 - The mod starts after Promethium science, so all new systems are post-victory/endgame.
-- Dust replication is broad enough to support interstellar self-sufficiency and all infinite science chains, but split across finite milestones and expensive enough to avoid replacing planet-scale production early.
+- Dust replication is broad enough to support interstellar self-sufficiency and many science inputs, but split across finite milestones and expensive enough to avoid replacing planet-scale production early.
 - Stellar fusion drives are the baseline propulsion loop and use cheaper fusion cells.
 - Antimatter drives provide four drive-power units each but require expensive replicated antimatter.
 - Infinite drive-efficiency research gives a long-term science sink while preserving fuel logistics through a 20% minimum cost multiplier.

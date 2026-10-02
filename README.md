@@ -24,7 +24,7 @@ Interstellar dust collectors gather `interstellar-dust` while installed on space
 
 Use the `Interstellar fleets` shortcut or `SHIFT + I` while standing on a space platform to open the fleet interface.
 
-The interface exposes four actions:
+The interface exposes five actions:
 
 - `Merge ship`: consumes one `ship-starter-pack` from the platform hub and increases fleet size by one.
 - `Split fleet`: divides the current fleet roughly in half and creates a new platform for the split-off ships.
@@ -32,9 +32,9 @@ The interface exposes four actions:
 - `Boost`: consumes fusion power cells and/or antimatter to increase fleet speed based on installed drives.
 - `Auto boost`: toggles continuous once-per-second boosting while drives and matching fuel are available, pausing silently when fuel runs short.
 
-Merge protection is intentionally strict. The mod records a compact signature of the represented platform layout. If the platform changes after consolidation, further merging is blocked until you either update the blueprint or split the fleet. This prevents a fleet of supposedly identical ships from silently drifting out of sync with the one platform that Factorio is actually simulating.
+Merge protection is intentionally strict. Layout checks include entity quality, exact positions, and platform foundation tiles. Existing fleets recorded before 0.2.2 need one explicit `Update blueprint` before merging again. The mod records a compact signature of the represented platform layout. If the platform changes after consolidation, further merging is blocked until you either update the blueprint or split the fleet. This prevents a fleet of supposedly identical ships from silently drifting out of sync with the one platform that Factorio is actually simulating.
 
-Splitting a fleet clears partial crafting and research progress on the original platform before creating the new split platform. That tradeoff keeps the system deterministic and avoids duplicating in-progress machine state.
+Splitting creates and verifies the new layout before committing either fleet size. If creation or cloning fails, the source fleet and its crafting progress are unchanged. After a successful split, partial crafting and bonus progress are cleared on both platforms. The new hub starts empty; machine inventories, belts, and fluids are currently cloned with the layout; proportional stock division remains a known economy limitation.
 
 ## New Content
 
@@ -49,7 +49,7 @@ Splitting a fleet clears partial crafting and research progress on the original 
 - `Ship starter pack`: expensive platform package consumed when merging ships into a fleet.
 - `Galactic Center`: a distant Space Age location and long-haul objective beyond normal platform logistics.
 - Expanded research progression splits antimatter containment, xenobiology, quantum fabrication, orbital industry, and deep dust prospecting into dedicated milestones.
-- Expanded quantum replication inputs include advanced construction parts, biological inputs, eggs, and promethium asteroid chunks so mature platforms can continue all infinite science chains aboard interstellar fleets.
+- Expanded quantum replication inputs include advanced construction parts, biological inputs, eggs, and promethium asteroid chunks. Orbital industry adds dedicated metallurgic, electromagnetic, agricultural, and cryogenic science recipes that run only in the matching interstellar machines, without removing vanilla planet restrictions. Cryogenic science still needs imported fluorine/ammonia or fluoroketone; indefinite all-science self-sufficiency is not yet complete. Building additional labs, replicators, and drives also requires some planet-built components.
 - `Interstellar dust crushing` and `Advanced interstellar dust crushing`: asteroid-crusher recipes that recover part of the dust input and roll for metallic, carbonic, oxide, and promethium asteroid chunks.
 
 ## Art Direction
@@ -71,7 +71,7 @@ In-game, all custom machines reuse base-game and Space Age entity graphics: each
 
 Interstellar Fleets is deliberately late-game:
 
-- Research begins after Promethium science.
+- Reaching the Shattered Planet unlocks the base interstellar technology for free; follow-up research is deliberately expensive.
 - Recipes require expensive Space Age intermediates.
 - Fleet merging consumes ship starter packs instead of being free.
 - Fusion acceleration consumes fusion power cells; antimatter acceleration consumes expensive replicated antimatter.
@@ -85,7 +85,7 @@ The goal is not to trivialize Space Age. The goal is to give mature megabases a 
 ## Current Implementation Notes
 
 - Fleet state is stored in Factorio `storage` by platform index.
-- The represented platform receives surface-level speed and energy-consumption effects based on fleet size, approximating the throughput and power draw of the abstract ships.
+- The represented platform receives additive surface-level speed and energy-consumption effects based on fleet size, approximating the throughput and power draw of the abstract ships while preserving other mods’ effects.
 - Dust collection, auto boost, and distance advancement run periodically in `control.lua`.
 - Dust overflow is buffered in a bounded per-fleet backlog that drains into the hub as space frees up; when the backlog is full, collection pauses like any output-blocked machine. Overflow is never spilled as ground items, which at fleet scale would create thousands of entities and destroy UPS.
 - Merge/split operations are exposed through a custom GUI and shortcut.
@@ -106,10 +106,27 @@ The goal is not to trivialize Space Age. The goal is to give mature megabases a 
 
 ## Build
 
-Build the release zip with:
+Build the release zip with Python 3.10 or later (no build dependencies):
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build.ps1
+```sh
+python scripts/build.py
 ```
 
-The script creates `dist/interstellar-fleets_<version>.zip` with Factorio's required top-level `interstellar-fleets_<version>/` folder inside the archive.
+The existing PowerShell entry point, `scripts/build.ps1`, calls the same builder. It creates `dist/interstellar-fleets_<version>.zip` with Factorio's required top-level folder and POSIX ZIP paths on every operating system. Output is reproducible and written atomically.
+
+The checked-in `dist/interstellar-fleets_0.2.1.zip` is a historical build with nonportable ZIP paths; do not use it to install this version. Build 0.2.2 from the current source with the command above, or download `interstellar-fleets-validation` from a successful GitHub Actions run. New generated ZIPs are kept as CI artifacts rather than committed to Git.
+
+Run the regression suite and asset validation:
+
+```sh
+python -m pip install -r requirements-dev.txt
+python scripts/test.py
+```
+
+For actual Factorio data-stage, fleet merge/split, and surface-effect checks:
+
+```sh
+python scripts/smoke_test.py /path/to/factorio/bin/x64/factorio
+```
+
+The official free Linux headless download includes Space Age. CI pins Factorio 2.0.77 and validates its SHA-256. Logs are written under `validation/`; successful process exit is insufficient unless the mod and its test completion markers appear. See [validation notes](docs/VALIDATION.md) for coverage and remaining limitations.

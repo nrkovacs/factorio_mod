@@ -126,9 +126,22 @@ script.on_configuration_changed(sync_interstellar_tech_gate)
 
 script.on_event(defines.events.on_force_created, function(event)
   init_storage()
-  if not storage.shattered_reached[event.force.name] then
-    event.force.lock_space_location("galactic-center")
+  -- A merged-away force name can be reused. Its historical progress must not
+  -- short-circuit the new force's first visit to the shattered planet.
+  storage.shattered_reached[event.force.name] = nil
+  set_interstellar_techs_enabled(event.force, false)
+  event.force.lock_space_location("galactic-center")
+end)
+
+script.on_event(defines.events.on_forces_merged, function(event)
+  init_storage()
+  if storage.shattered_reached[event.source_name] then
+    storage.shattered_reached[event.destination.name] = true
   end
+  storage.shattered_reached[event.source_name] = nil
+  -- Preserve the destination's own progress and research inherited from the
+  -- source before resynchronizing the technology/location gate.
+  sync_interstellar_tech_gate()
 end)
 
 script.on_event(defines.events.on_space_platform_changed_state, function(event)
@@ -208,14 +221,21 @@ local function platform_signature(surface, force)
     if entity.valid and not TRANSIENT_TYPES[entity.type] then
       parts[#parts + 1] = table.concat({
         entity.name,
-        math.floor(entity.position.x),
-        math.floor(entity.position.y),
-        entity.direction or 0
+        entity.position.x,
+        entity.position.y,
+        entity.direction or 0,
+        entity.quality.name
       }, ":")
     end
   end
+  for _, tile in pairs(surface.find_tiles_filtered({name = "space-platform-foundation"})) do
+    parts[#parts + 1] = table.concat({tile.name, tile.position.x, tile.position.y}, ":")
+  end
   table.sort(parts)
-  return table.concat(parts, "|")
+  -- Old signatures did not track quality, exact positions, or foundation.
+  -- Require an explicit blueprint refresh rather than silently approving a
+  -- possibly changed layout when loading a fleet recorded by an older version.
+  return "v2|" .. table.concat(parts, "|")
 end
 
 -- Deliver dust to the hub, buffering overflow in a bounded per-fleet backlog.
@@ -228,12 +248,12 @@ local function deliver_dust(platform, fleet, amount)
   if not hub or not hub.valid then
     return
   end
-  local pending = math.min(fleet.dust_backlog + amount, DUST_BACKLOG_CAP)
+  local pending = fleet.dust_backlog + amount
   if pending <= 0 then
     return
   end
   local inserted = hub.insert({name = "interstellar-dust", count = pending})
-  fleet.dust_backlog = pending - inserted
+  fleet.dust_backlog = math.min(pending - inserted, DUST_BACKLOG_CAP)
 end
 
 local function each_platform(callback)
@@ -371,18 +391,34 @@ local function clone_platform_layout(source_platform, destination_platform)
   end
 
   return pcall(function()
+    -- The starter hub must survive: destroying it schedules the entire
+    -- destination platform for deletion, and hubs cannot be cloned in 2.0.
     source_platform.surface.clone_area({
       source_area = area,
       destination_area = area,
       destination_surface = destination_platform.surface,
       destination_force = destination_platform.force,
       clone_tiles = true,
-      clone_entities = true,
-      clear_destination_entities = true,
+      clone_entities = false,
+      clear_destination_entities = false,
       clear_destination_decoratives = true,
       expand_map = true,
       create_build_effect_smoke = false
     })
+    local entities = {}
+    for _, entity in pairs(source_platform.surface.find_entities_filtered({force = source_platform.force})) do
+      if entity.valid and entity.type ~= "space-platform-hub" and not TRANSIENT_TYPES[entity.type] then
+        entities[#entities + 1] = entity
+      end
+    end
+    source_platform.surface.clone_entities({
+      entities = entities,
+      destination_offset = {0, 0},
+      destination_surface = destination_platform.surface,
+      destination_force = destination_platform.force,
+      create_build_effect_smoke = false
+    })
+    destination_platform.hub.copy_settings(source_platform.hub)
   end)
 end
 
@@ -390,41 +426,45 @@ local function merge_fleet(player, platform, fleet)
   local hub = platform.hub
   if not hub or not hub.valid then
     notify(player, {"interstellar-fleets.no-hub"})
-    return
+    return false
   end
   local signature = platform_signature(platform.surface, platform.force)
   if fleet.blueprint_hash and fleet.blueprint_hash ~= signature then
     notify(player, {"interstellar-fleets.blueprint-mismatch"})
-    return
+    return false
   end
   if hub.get_item_count("ship-starter-pack") < 1 then
     notify(player, {"interstellar-fleets.need-pack"})
-    return
+    return false
   end
   fleet.blueprint_hash = signature
   hub.remove_item({name = "ship-starter-pack", count = 1})
   fleet.size = fleet.size + 1
   notify(player, {"interstellar-fleets.merged", fleet.size})
+  return true
 end
 
 local function split_fleet(player, platform, fleet)
   if fleet.size < 2 then
     notify(player, {"interstellar-fleets.cannot-split"})
-    return
+    return false
+  end
+  if not platform.hub or not platform.hub.valid then
+    notify(player, {"interstellar-fleets.no-hub"})
+    return false
   end
 
   local split_size = math.floor(fleet.size / 2)
-  fleet.size = fleet.size - split_size
-  clear_progress(platform.surface)
+  local source_signature = platform_signature(platform.surface, platform.force)
 
   local location = platform.space_location or platform.last_visited_space_location
-  local force = player and player.valid and player.force or platform.force
+  local force = platform.force
   local function try_create_platform(location_name)
     local ok, created = pcall(function()
       return force.create_space_platform({
         name = platform.name .. " split",
         planet = location_name,
-        starter_pack = "space-platform-starter-pack"
+        starter_pack = {name = "space-platform-starter-pack", quality = platform.hub.quality.name}
       })
     end)
     if ok and created then
@@ -441,15 +481,35 @@ local function split_fleet(player, platform, fleet)
     new_platform = try_create_platform("nauvis")
   end
   if not new_platform then
-    fleet.size = fleet.size + split_size
     notify(player, {"interstellar-fleets.split-failed"})
-    return
+    return false
   end
 
-  pcall(function()
+  local prepared, preparation_error = pcall(function()
     new_platform.apply_starter_pack()
+    assert(new_platform.valid and new_platform.hub and new_platform.hub.valid, "starter hub is missing")
+    local cloned, clone_error = clone_platform_layout(platform, new_platform)
+    assert(cloned, clone_error or "source layout cannot be cloned")
+    -- clone_area has no success result and may skip entities that cannot be
+    -- cloned. Validate the actual destination before committing fleet state.
+    assert(new_platform.valid and new_platform.surface and new_platform.surface.valid, "destination surface is missing")
+    assert(new_platform.hub and new_platform.hub.valid, "destination hub is missing")
+    assert(platform_signature(new_platform.surface, new_platform.force) == source_signature, "destination layout is incomplete")
   end)
-  clone_platform_layout(platform, new_platform)
+  if not prepared then
+    log("Interstellar Fleets: split preparation failed: " .. tostring(preparation_error))
+    -- Only the newly created destination is disposable. Failed preparation
+    -- must not lose ships or reset crafting on the source fleet.
+    if new_platform.valid then
+      new_platform.destroy(0)
+    end
+    notify(player, {"interstellar-fleets.split-failed"})
+    return false
+  end
+
+  clear_progress(platform.surface)
+  clear_progress(new_platform.surface)
+  fleet.size = fleet.size - split_size
 
   local new_fleet = get_fleet(new_platform)
   new_fleet.size = split_size
@@ -458,6 +518,7 @@ local function split_fleet(player, platform, fleet)
   new_fleet.blueprint_hash = fleet.blueprint_hash
 
   notify(player, {"interstellar-fleets.split-complete", fleet.size, split_size})
+  return true
 end
 
 local function boost_fleet(player, platform, fleet, quiet)
@@ -520,6 +581,7 @@ local function update_fleet_blueprint(player, platform, fleet)
   fleet.blueprint_hash = platform_signature(platform.surface, platform.force)
   clear_progress(platform.surface)
   notify(player, {"interstellar-fleets.blueprint-updated"})
+  return true
 end
 
 script.on_event(defines.events.on_gui_click, function(event)
@@ -595,16 +657,19 @@ script.on_nth_tick(60, function()
       local speed_effect = speed_bonus * coordination_multiplier
 
       -- Only touch global_effect when the fleet bonus actually changes.
-      -- Rewriting it every second dirties every effect receiver on the
-      -- surface and stomps effects other mods may have applied.
+      -- Apply our delta to the current table so unrelated effects, including
+      -- changes made by other mods since the last update, remain intact.
       if fleet.applied_speed_effect ~= speed_effect or fleet.applied_consumption_effect ~= speed_bonus then
-        if speed_bonus > 0 then
-          surface.global_effect = {
-            speed = speed_effect,
-            consumption = speed_bonus
-          }
-        elseif fleet.applied_speed_effect then
-          surface.global_effect = nil
+        local speed_delta = speed_effect - (fleet.applied_speed_effect or 0)
+        local consumption_delta = speed_bonus - (fleet.applied_consumption_effect or 0)
+        if speed_delta ~= 0 or consumption_delta ~= 0 then
+          local effects = surface.global_effect or {}
+          -- Factorio stores module effects in whole percentage points. Round
+          -- the float readback before writing so 1.29999995 - 1 does not
+          -- truncate a 30% external bonus to 29% on each merge/split cycle.
+          effects.speed = math.floor(((effects.speed or 0) + speed_delta) * 100 + 0.5) / 100
+          effects.consumption = math.floor(((effects.consumption or 0) + consumption_delta) * 100 + 0.5) / 100
+          surface.global_effect = effects
         end
         fleet.applied_speed_effect = speed_effect
         fleet.applied_consumption_effect = speed_bonus
@@ -663,8 +728,7 @@ remote.add_interface("interstellar-fleets", {
     if not platform then
       return false
     end
-    merge_fleet(player, platform, get_fleet(platform))
-    return true
+    return merge_fleet(player, platform, get_fleet(platform))
   end,
   split = function(player_index, platform_index)
     local player = player_index and game.get_player(player_index) or nil
@@ -672,8 +736,7 @@ remote.add_interface("interstellar-fleets", {
     if not platform then
       return false
     end
-    split_fleet(player, platform, get_fleet(platform))
-    return true
+    return split_fleet(player, platform, get_fleet(platform))
   end,
   update_blueprint = function(player_index, platform_index)
     local player = player_index and game.get_player(player_index) or nil
@@ -681,8 +744,7 @@ remote.add_interface("interstellar-fleets", {
     if not platform then
       return false
     end
-    update_fleet_blueprint(player, platform, get_fleet(platform))
-    return true
+    return update_fleet_blueprint(player, platform, get_fleet(platform))
   end,
   boost = function(player_index, platform_index)
     local player = player_index and game.get_player(player_index) or nil
@@ -690,8 +752,7 @@ remote.add_interface("interstellar-fleets", {
     if not platform then
       return false
     end
-    boost_fleet(player, platform, get_fleet(platform))
-    return true
+    return boost_fleet(player, platform, get_fleet(platform))
   end,
   set_auto_boost = function(platform_index, enabled)
     local platform = find_platform(platform_index)

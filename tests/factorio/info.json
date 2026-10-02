@@ -1,0 +1,8 @@
+{
+  "name": "interstellar-fleets-validation",
+  "version": "0.1.0",
+  "title": "Interstellar Fleets Regression Validation",
+  "author": "Interstellar Fleets contributors",
+  "factorio_version": "2.0",
+  "dependencies": ["interstellar-fleets"]
+}

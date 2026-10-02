@@ -1,0 +1,3 @@
+# Offline regression harness + existing art validation.
+lupa==2.8
+Pillow>=10.0,<13

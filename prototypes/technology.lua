@@ -163,7 +163,11 @@ data:extend({
       {type = "unlock-recipe", recipe = "interstellar-foundry"},
       {type = "unlock-recipe", recipe = "interstellar-electromagnetic-plant"},
       {type = "unlock-recipe", recipe = "interstellar-biochamber"},
-      {type = "unlock-recipe", recipe = "interstellar-cryogenic-plant"}
+      {type = "unlock-recipe", recipe = "interstellar-cryogenic-plant"},
+      {type = "unlock-recipe", recipe = "interstellar-metallurgic-science-pack"},
+      {type = "unlock-recipe", recipe = "interstellar-electromagnetic-science-pack"},
+      {type = "unlock-recipe", recipe = "interstellar-agricultural-science-pack"},
+      {type = "unlock-recipe", recipe = "interstellar-cryogenic-science-pack"}
     }
   },
   {
