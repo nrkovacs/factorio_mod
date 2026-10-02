@@ -94,7 +94,7 @@ for index, definition in ipairs(science_machines) do
 end
 
 local function machine(kind, name, categories)
-  return {
+  local fixture = {
     type = kind, name = name, icon = "__base__/graphics/icons/fixture.png", icon_size = 64,
     minable = {mining_time = 1, result = name},
     crafting_categories = categories,
@@ -105,6 +105,20 @@ local function machine(kind, name, categories)
     }}},
     working_sound = {sound = {filename = "fixture.ogg", volume = 0.5}}
   }
+  if name == "electromagnetic-plant" then
+    -- Actual 2.0.77 shape: these names are checked by the engine only after
+    -- data-final-fixes. A plain working_sound fixture hid the dangling gates.
+    fixture.working_sound = {
+      main_sounds = {
+        {sound = {filename = "warmup.ogg"}, play_for_working_visualisations = {"warm-up"}},
+        {sound = {filename = "steady-loop.ogg"}, play_for_working_visualisations = {"rotation", "rotation-continue"}, fade_in_ticks = 4, fade_out_ticks = 20},
+        {sound = {filename = "cooldown.ogg"}, play_for_working_visualisations = {"cool-down"}}
+      },
+      sound_accents = {{sound = {filename = "accent.ogg"}, play_for_working_visualisation = "rotation", frame = 102}},
+      max_sounds_per_prototype = 2
+    }
+  end
+  return fixture
 end
 for _, definition in ipairs(science_machines) do
   data:extend({machine("assembling-machine", definition[2], {definition[3], "crafting"})})
@@ -189,12 +203,32 @@ end
 
 local replicator = data.raw["assembling-machine"]["quantum-replicator"]
 check(equal(replicator.crafting_categories, {"interstellar-replication"}), "replicator is not a general-purpose electromagnetic plant")
-check(replicator.graphics_set.animation.layers[1].tint ~= nil, "entity sprite is tinted")
+check(replicator.graphics_set.animation.layers[1].filename ==
+  "__interstellar-fleets__/graphics/entity/quantum-replicator/quantum-replicator-animation.png",
+  "placed replicator uses its custom Blender artwork")
+check(replicator.graphics_set.animation.layers[2].draw_as_shadow == true,
+  "custom shadow uses Factorio's shadow render pass")
 check(replicator.graphics_set.animation.layers[2].tint == nil, "shadow is not tinted")
-check(replicator.working_sound.sound.tint == nil, "sound is not treated as a sprite")
+check(replicator.graphics_set.working_visualisations[1].animation.draw_as_glow == true,
+  "replicator emission is an activity-dependent glow")
+check(replicator.icons[1].icon == "__interstellar-fleets__/graphics/icons/quantum-replicator.png",
+  "replicator icon matches its placed artwork")
+for _, name in ipairs({"quantum-replicator", "interstellar-electromagnetic-plant"}) do
+  local sound = data.raw["assembling-machine"][name].working_sound
+  check(#sound.main_sounds == 1, name .. " retains only the steady machine loop")
+  check(sound.main_sounds[1].sound.filename == "steady-loop.ogg", name .. " does not loop warm-up or cool-down sounds")
+  check(sound.main_sounds[1].play_for_working_visualisations == nil, name .. " has no dangling visual sound gate")
+  check(sound.sound_accents == nil, name .. " has no old animation frame accents")
+  check(sound.main_sounds[1].fade_in_ticks == 4 and sound.main_sounds[1].fade_out_ticks == 20,
+    name .. " preserves loop fades")
+  check(sound.main_sounds[1].sound.tint == nil, "sound is not treated as a sprite")
+end
 for _, name in ipairs({"stellar-fusion-drive", "antimatter-drive"}) do
   check(data.raw["simple-entity-with-owner"][name] ~= nil, name .. " uses the static drive type")
   check(data.raw.thruster[name] == nil, name .. " does not inherit fluid fuel requirements")
+  check(data.raw["simple-entity-with-owner"][name].animations.layers[1].filename ==
+    "__interstellar-fleets__/graphics/entity/" .. name .. "/" .. name .. "-animation.png",
+    name .. " uses custom art through the simple entity animations property")
 end
 
 print("Prototype regression checks passed: " .. checks)

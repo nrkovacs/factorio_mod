@@ -54,18 +54,26 @@ Splitting creates and verifies the new layout before committing either fleet siz
 
 ## Art Direction
 
-The mod now includes custom artwork for its thumbnail, item icons, technology icons, entity sprite sheets, and review animations. The newest assets are rendered with Blender CLI from procedural 3D models, then packed into Factorio-sized sprites:
+The complete original Blender collection gives Interstellar Fleets a shared industrial identity: cast metal, copper plumbing, worn panels, ceramic insulation, and restrained process lighting. All nine custom machine bodies and their icons are now used in-game, with the correct Factorio 2.0 graphics fields and unchanged gameplay footprints.
 
-- `thumbnail.png` shows an industrial fleet approaching a bright galactic core.
-- `graphics/icons/` contains distinct generated icons for dust, starter packs, antimatter, labs, replicators, drives, and all interstellar platform machines.
-- `graphics/technology/` contains dedicated generated technology art for every custom technology.
-- `graphics/entity/` contains transparent 4-frame sprite sheets for the custom animated buildings rendered from isometric Blender frames.
-- `graphics/previews/` contains animated GIF previews so sprite-sheet animations can be reviewed from GitHub without launching Factorio.
-- `wiki/art-review.html` displays the GIF previews in one browser-friendly review page.
-- `scripts/blender_render_assets.py` builds and renders the procedural 3D models.
-- `scripts/pack_blender_assets.py` crops, scales, and packs those renders into icons, technology art, sprite sheets, glow masks, GIF previews, and the preview sheet.
+![Interstellar Fleets original Blender art collection](graphics/art-preview-sheet.png)
 
-In-game, all custom machines reuse base-game and Space Age entity graphics: each interstellar machine is a deep copy of its vanilla counterpart (biolab, electromagnetic plant, foundry, biochamber, cryogenic plant, asteroid collector, thruster) with a per-machine color tint applied to its sprite layers and icon. This is required for correctness in Factorio 2.0 — crafting machines no longer accept a bare `animation` property, only `graphics_set` — and it keeps icons visually consistent with the placed entities. The generated Blender sprite sheets and machine icons remain in `graphics/` for reference and the art-review wiki page, but are no longer wired into the prototypes; custom icons are still used in-game for interstellar dust, antimatter, the ship starter pack, the thumbnail, and all technology art. No third-party mod assets are used, so the mod needs no extra dependencies and no license review.
+- **12 editable Blender models**: nine machines plus distinct dust, antimatter, and ship starter pack models.
+- **27 registered sprite atlases**: eight-frame body, emission, and geometric shadow passes; the collector includes four directions.
+- **12 inventory icons and 14 distinct technology images**, derived from the same models.
+- **Individual sample boards, transparent hero renders, nine animated previews, fleet key art, and a new thumbnail.**
+
+Browse the [sample images](art/samples), [Blender sources](art/models), or [art review gallery](wiki/art-review.html). The [art guide](docs/ART.md) explains the pipeline and includes a sample/source link for every model. `art/manifest.json` records dimensions, source relationships, and SHA-256 checksums.
+
+The lab uses custom on/off animations, crafting machines use `graphics_set`, and the item-fueled drives use simple-entity animations. Native collector arms and fluid socket overlays remain functional. The renderer keeps every animation frame and pass registered to the same origin; the packer does not independently crop machine frames. Legacy reference images under `graphics/source` remain historical material and are not inputs to this collection.
+
+Rebuild from the repository root with Blender and Python/Pillow:
+
+```sh
+blender -b --python-exit-code 1 --python scripts/blender_render_assets.py -- --asset all --samples 32
+python3 scripts/pack_blender_assets.py
+python3 scripts/validate_art_assets.py --blender blender
+```
 
 ## Balance Intent
 
