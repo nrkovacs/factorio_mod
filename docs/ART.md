@@ -57,7 +57,8 @@ recenters, or resizes machine frames. The camera origin, scale, shift, and layer
 registration therefore remain consistent throughout the animation. Emission
 comes from the model's luminous surfaces; it is not a blurred silhouette of the
 whole machine. Black emission-pass occluders become transparent; unpremultiplying
-the color channels preserves their additive contribution. Shadow opacity is
+the color channels preserves their chroma. The additive contribution is scaled
+to 22% so process colors retain detail instead of clipping to white. Shadow opacity is
 reduced to 32% for in-game use. Neither operation changes any pixel's position.
 The engine receives shadows through `draw_as_shadow` and emission through an
 additive glow layer.

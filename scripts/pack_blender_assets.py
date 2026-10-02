@@ -168,14 +168,15 @@ def additive(canvas: Image.Image, glow: Image.Image) -> Image.Image:
 def prepare_pass(frame: Image.Image, layer: str) -> Image.Image:
     if layer == "glow":
         # Blender's emission-only scene keeps black occluders. Make them fully
-        # transparent and unpremultiply color to preserve RGB * alpha exactly.
+        # transparent and unpremultiply color to preserve chroma before calibrating the additive layer to 22%.
         r, g, b, original_alpha = frame.split()
         intensity = ImageChops.lighter(ImageChops.lighter(r, g), b)
         divisor = intensity.point(lambda value: max(1, value))
         channels = [ImageMath.lambda_eval(
             lambda args: args["convert"](args["channel"] * 255 / args["divisor"], "L"),
             channel=channel, divisor=divisor) for channel in (r, g, b)]
-        return Image.merge("RGBA", (*channels, ImageChops.multiply(original_alpha, intensity)))
+        alpha = ImageChops.multiply(original_alpha, intensity).point(lambda value: round(value * .22))
+        return Image.merge("RGBA", (*channels, alpha))
     if layer == "shadow":
         frame = frame.copy()
         frame.putalpha(frame.getchannel("A").point(lambda value: round(value * .32)))

@@ -10,7 +10,7 @@
     },
     "packer": {
       "path": "scripts/pack_blender_assets.py",
-      "sha256": "83c959c57de80e59b2ad584a7bd498ad85d42e6749b1b18efeb844ae33a59713"
+      "sha256": "861b20330667e0d451b6a7c32ac80fc038f7dcedbcc28bd1f05307f1a4f63da0"
     },
     "render_specification": {
       "path": "art/render-manifest.json",
@@ -202,9 +202,9 @@
       "animation_speed": 0.15,
       "sha256": {
         "animation": "92899c21b790782fdb5b5f704b74be22a60378dca725eac828dfb8c085aae697",
-        "glow": "cb4653465b3b754b662963939b95ea8736d08677b0a88ef9e528e5243b552cff",
+        "glow": "42c8e1701151006fc0dba821433286f5bf7590a91193b24cd77e681b6fa14ce4",
         "shadow": "3d2a449336da576c166c5ff01b4fed8d5353668c774d49018e836a8ed5499b2c",
-        "preview": "eca6cfcac2f543a6f2f82ab516f28dce36184b8be8e78c45bae88dd387f9199e"
+        "preview": "4f4fbf2798e5526d9f53096f945773ef81410ede40215ebc78badd0038ec9e86"
       },
       "animation": "graphics/entity/interstellar-lab/interstellar-lab-animation.png",
       "glow": "graphics/entity/interstellar-lab/interstellar-lab-glow.png",
@@ -225,9 +225,9 @@
       "animation_speed": 0.15,
       "sha256": {
         "animation": "c60d8e9d7da04335a9ce3e32167e0f710203125eda5d35731cd05145909e4322",
-        "glow": "c84d8dab97211f4f2c08bc0fe8efac2f041f11f57d661690978dbb2f1b6e06fd",
+        "glow": "367d1b534ab393781c1f5106f8d831e265704b10a1ee393484fb8e96d19a9f37",
         "shadow": "28a43abb6098d6e21b1c4f9208485f879efbe4a78a3d6b3ac284bb4e50ca9202",
-        "preview": "d0ff1aa54e09c2f7dfd397d01322cba500333088fc9099e09ea072a4e39e14f8"
+        "preview": "8759eba5b535893c74d3c746564c62abada783fbcd2e2988d25a6314ed643324"
       },
       "animation": "graphics/entity/quantum-replicator/quantum-replicator-animation.png",
       "glow": "graphics/entity/quantum-replicator/quantum-replicator-glow.png",
@@ -248,9 +248,9 @@
       "animation_speed": 0.15,
       "sha256": {
         "animation": "54962f76ecee07e8b139e50fab79efbd0d641ad50c319676abcd220dd33603de",
-        "glow": "8e0aa9c862d04eabf512cf2db5e6d23e3c4bcd395dc3b4b484f45a46babdb466",
+        "glow": "b19c3d79ff7b22e8545753362eef955314485e6712187ab079161e467e588d75",
         "shadow": "30a256148d95bddc0db6436653cb01f53efc910b1caca74cb2c1a4923211291a",
-        "preview": "58bb35773f860d6b7f2bf5d527b4ca4f2a5218d81af0c1b9908e221542ce66ae"
+        "preview": "c1fc331b07d35593b6e1d00337df7802c3c92b5e170dda9a8247720705a0685b"
       },
       "animation": "graphics/entity/interstellar-dust-collector/interstellar-dust-collector-animation.png",
       "glow": "graphics/entity/interstellar-dust-collector/interstellar-dust-collector-glow.png",
@@ -271,9 +271,9 @@
       "animation_speed": 0.15,
       "sha256": {
         "animation": "b9006361e303280dae408cd48e4f795f9944436e68df1e4639ab81317eaf17a3",
-        "glow": "f482eb755884ad2223d0741e8e1533c521236406ee850a8f43eb0bf20f6c244a",
+        "glow": "26f515cdaad11e571acd555ac704deafa39044d1d47cf6be0c35d0b801919c39",
         "shadow": "97a2a6334d744a2dffcb14acb851c1316542e1d1e5b77da427a69b4f26398c00",
-        "preview": "10a2714d9799a07c5bfe0e76490426bf78f83d2ac912d9a5a1e874a260c8a78f"
+        "preview": "1b57fc39e19e0f0fe484b300b895645b3990f4e9bec009e463413aed3d35f10d"
       },
       "animation": "graphics/entity/stellar-fusion-drive/stellar-fusion-drive-animation.png",
       "glow": "graphics/entity/stellar-fusion-drive/stellar-fusion-drive-glow.png",
@@ -294,9 +294,9 @@
       "animation_speed": 0.15,
       "sha256": {
         "animation": "c55a92c5242b7564323f33b5d2958ed16cab4874ecad8a35d8f72b55b3020a61",
-        "glow": "d65ce95d772097d2810e667bdc10b73d332515a687e5b280af35b3f49a4bb5d9",
+        "glow": "64007024473047ed859e2a14f03ee3cb37b118af55bb9e553ea0943c56a33438",
         "shadow": "97a2a6334d744a2dffcb14acb851c1316542e1d1e5b77da427a69b4f26398c00",
-        "preview": "f3e7a11b55f72095f06e6e957d4c9180f87d129f4532f8406a5f5360a40e7b39"
+        "preview": "1bcd06d8687241b41f9ede4e975b4ee30c43594799493b65add07295920ccb13"
       },
       "animation": "graphics/entity/antimatter-drive/antimatter-drive-animation.png",
       "glow": "graphics/entity/antimatter-drive/antimatter-drive-glow.png",
@@ -317,9 +317,9 @@
       "animation_speed": 0.15,
       "sha256": {
         "animation": "19f68b45a3a6767de88b09f687d68f32427fc3beadb3d35a82f0b1a61b9bc9d8",
-        "glow": "4af854453736623cae93a71cec54cdf613de9100223eda7dc9f9234d7c8f839f",
+        "glow": "8381675a998b9a74191a708068cd5f84b9049426f72c3f3c897300116810965f",
         "shadow": "41188cf1cf6b9e1900c3f08b9b49f100721a73911d131b99ea1189ff911a01f9",
-        "preview": "ab26722b590e3da3b2c1fc0ba04b92e3c6d7f2dd7ae47beee5310874d607c1be"
+        "preview": "2521331c7e1429eca8b3b66c5bd2a16557b40c0a82c8426efe1c60e20df5d1b5"
       },
       "animation": "graphics/entity/interstellar-foundry/interstellar-foundry-animation.png",
       "glow": "graphics/entity/interstellar-foundry/interstellar-foundry-glow.png",
@@ -340,9 +340,9 @@
       "animation_speed": 0.15,
       "sha256": {
         "animation": "420c719c83bbbc6643f39fbcf709dd0cd1a3c7be29a55b85638d504832ebbad9",
-        "glow": "e5a23be1ef2b3bdbbca366b8605aa990bd00ef496c0b45b57ac9e8a5d79a7450",
+        "glow": "8b1b92fb2654f0fbafcfd578413bb0c550c7b7e30dfd784049ff58e8054a86b2",
         "shadow": "8f3bc89075f3d9b6ccfacea9ec78c000bd35ac64c3b1f50b94ce59b1fd6fac7f",
-        "preview": "f521ba22b2999bd3ed88d4f1bacf1f00bee540582bf678b954d899643ed020e8"
+        "preview": "3f24f16c2c53086f319e245faaea003c365182c5ea72899710ea077b2dd11726"
       },
       "animation": "graphics/entity/interstellar-electromagnetic-plant/interstellar-electromagnetic-plant-animation.png",
       "glow": "graphics/entity/interstellar-electromagnetic-plant/interstellar-electromagnetic-plant-glow.png",
@@ -363,9 +363,9 @@
       "animation_speed": 0.15,
       "sha256": {
         "animation": "ebff9ed2efa78fe3ac7d3673749c9d930daf681e3195ba6fd90aa89883921d19",
-        "glow": "610c45bee429734f9d3276a66210411f9792d5cccc4d1fa540c9ed3870c0bde9",
+        "glow": "f7459741c9599704005cb8cb91915ea24cf8fd004ec4c73d2b5d8fee81649704",
         "shadow": "dad48e1514dd47c8a22c64077da94d7e41e5d44249e8b9cf53edd3f529c8b3f0",
-        "preview": "6babadba5f3e10bf0d02a988b0290010888debe0140fb11683fe4b4f37b1a562"
+        "preview": "071d53d96ec192267669a938e476489e9a4d787421f66e44e228d147f207b782"
       },
       "animation": "graphics/entity/interstellar-biochamber/interstellar-biochamber-animation.png",
       "glow": "graphics/entity/interstellar-biochamber/interstellar-biochamber-glow.png",
@@ -386,9 +386,9 @@
       "animation_speed": 0.15,
       "sha256": {
         "animation": "7312e2ffbd00416f8a12c3d217f38a51ec9ad7ca1e63269f6dd491065b956fc3",
-        "glow": "61fb3d25432f1567672df56ad5e9ab547bb476c122e27cfe9c0fcc5a2a2bedc0",
+        "glow": "1c3f78df254e334cc9f94fd11952f16cf05e6afdf850fa03a55babd5d871c7b4",
         "shadow": "fc46986dd244670f46fc71e2f82b0bb980eac1df026c2d80598adb8d9099c42e",
-        "preview": "87209eb5eda1c48102dbc6070c82692d785215a5e99bcb236ed7f4d1cf98817f"
+        "preview": "38d271383358c473ccdc332bf96fa9c3e68c8dd5283bd71047942db4ccc33556"
       },
       "animation": "graphics/entity/interstellar-cryogenic-plant/interstellar-cryogenic-plant-animation.png",
       "glow": "graphics/entity/interstellar-cryogenic-plant/interstellar-cryogenic-plant-glow.png",
