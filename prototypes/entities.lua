@@ -111,18 +111,22 @@ apply_tint(antimatter_drive, {r = 0.78, g = 0.4, b = 1.0, a = 1.0})
 
 local space_foundry = copy_prototype("assembling-machine", "foundry", "interstellar-foundry")
 space_foundry.surface_conditions = nil
+table.insert(space_foundry.crafting_categories, "interstellar-metallurgy")
 apply_tint(space_foundry, {r = 0.55, g = 0.9, b = 1.0, a = 1.0})
 
 local space_electromagnetic_plant = copy_prototype("assembling-machine", "electromagnetic-plant", "interstellar-electromagnetic-plant")
 space_electromagnetic_plant.surface_conditions = nil
+table.insert(space_electromagnetic_plant.crafting_categories, "interstellar-electromagnetics")
 apply_tint(space_electromagnetic_plant, {r = 0.75, g = 0.45, b = 1.0, a = 1.0})
 
 local space_biochamber = copy_prototype("assembling-machine", "biochamber", "interstellar-biochamber")
 space_biochamber.surface_conditions = nil
+table.insert(space_biochamber.crafting_categories, "interstellar-organic")
 apply_tint(space_biochamber, {r = 0.45, g = 1.0, b = 0.65, a = 1.0})
 
 local space_cryogenic_plant = copy_prototype("assembling-machine", "cryogenic-plant", "interstellar-cryogenic-plant")
 space_cryogenic_plant.surface_conditions = nil
+table.insert(space_cryogenic_plant.crafting_categories, "interstellar-cryogenics")
 apply_tint(space_cryogenic_plant, {r = 0.55, g = 0.9, b = 1.0, a = 1.0})
 
 local function machine_item(entity, subgroup, order)
